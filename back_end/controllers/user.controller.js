@@ -257,7 +257,7 @@ export async function recupPinController(req, res) {
     await emailProcess({
       email,
       pin: setPin.codepin,
-      type: "request-new-password",
+      type: "recup-code-pin",
     });
 
     // important  de mettre le return a l'interieur du if
@@ -352,7 +352,7 @@ export async function updatePasswordController(req, res) {
     // si tout se passe bien on lui envoi un mail
     if (user._id) {
       // send email notification
-      await emailProcess({ email, type: "update-password-success" });
+      await emailProcess({ email, type: "modification-mot-de-passe" });
       // important  de mettre le return a l'interieur du if
       return res.json({
         status: "success",
