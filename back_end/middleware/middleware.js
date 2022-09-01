@@ -17,7 +17,7 @@ export function authMiddleware(req, res, next) {
   try {
     // si y'a un token on verifie le token
     const decoded = jwt.verify(token, APP_TOKEN_SECRET);
-    // on crée une varibale user dans req pour lui affecter le contenu du token decode
+    // on crée une varibale user dans notre entete req pour lui affecter le contenu du token decode
     req.user = decoded;
   } catch (err) {
     // rsesulat en cas de token invalide
