@@ -101,6 +101,11 @@ export async function getTicketUserByIdParamController(req, res) {
     if (!mongoose.Types.ObjectId.isValid(_id)) {
       return res.send("ID inconnu :" + _id);
     }
+
+    // on verifie si le parametre est exactement l'id du ticket
+    if (_id === clienId) {
+      return res.send("parametre ticket incorrect:" + _id);
+    }
     // on recherche le ticket depuis la base de donnée
     const tickets = await ticketModel.getTicketById(_id, clienId);
     return res.status(200).json({
@@ -119,12 +124,21 @@ export async function updateSenderReplyController(req, res) {
   try {
     // on recupère les saisie du sender
     const { expediteur, message } = req.body;
+
+    // on recupere l'id du user connecté depuis notre entete
+    const clienId = req.user.id;
+
     // on recupere l'id du ticket
     const { _id } = req.params;
 
     // on vérifie si le paramètre qui est passé existe dans la base de donnée
     if (!mongoose.Types.ObjectId.isValid(_id)) {
       return res.send("ID inconnu :" + _id);
+    }
+
+    // on verifie si le parametre est exactement l'id du ticket
+    if (_id === clienId) {
+      return res.send("parametre ticket incorrect:" + _id);
     }
     // variable de gestion des erreurs
     let errors = {
@@ -172,17 +186,21 @@ export async function updateSenderReplyController(req, res) {
 // on cloture le ticket si
 export async function updateStatusCloseController(req, res) {
   try {
-    // on recupere l'id du user connecté depuis notre entete
-    const clienId = req.user.id;
     // on recupere l'id du ticket
     const { _id } = req.params;
 
+    const clienId = req.user.id;
     // on vérifie si le paramètre qui est passé existe dans la base de donnée
     if (!mongoose.Types.ObjectId.isValid(_id)) {
       return res.send("ID inconnu :" + _id);
     }
+
+    // on verifie si le parametre est exactement l'id du ticket
+    if (_id === clienId) {
+      return res.send("parametre ticket incorrect:" + _id);
+    }
     // on cloture le ticket depuis la base de donnée
-    const reponse = await ticketModel.updateStatusClose({ _id, clienId });
+    const reponse = await ticketModel.updateStatusClose({ _id });
     // reponse si tout se passe bien
     if (reponse._id) {
       return res.status(200).json({
@@ -211,6 +229,11 @@ export async function deleteTicketController(req, res) {
     // on vérifie si le paramètre qui est passé existe dans la base de donnée
     if (!mongoose.Types.ObjectId.isValid(_id)) {
       return res.send("ID inconnu :" + _id);
+    }
+
+    // on verifie si le parametre est exactement l'id du ticket
+    if (_id === clienId) {
+      return res.send("parametre ticket incorrect:" + _id);
     }
     // on supprime le ticket le ticket depuis la base de donnée
     await ticketModel.deleteTicket(_id, clienId);
