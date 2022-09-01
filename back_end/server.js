@@ -65,9 +65,6 @@ mongoose
 app.get("*", authMiddleware);
 // pour connecter automatiquement le user si on connait son token
 // pour eviter que l'utilisateur se connecte automatiquement a chaque fois
-// app.get("/jwtid", requireAuthMiddleware, (req, res) => {
-//   res.status(200).send(res.locals.user._id);
-// });
 
 // ==========
 // ROUTES
