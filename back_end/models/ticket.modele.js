@@ -118,11 +118,11 @@ async function updateSenderReply({ _id, message, expediteur }) {
 
 //on rend le ticket invalide
 // client satisfait
-async function updateStatusClose({ _id, clientId }) {
+async function updateStatusClose({ _id }) {
   const closedStatut = await this.findOneAndUpdate(
     // recherche via id ticket  et id utilisateur
     // on recherche le ticket associe a un user
-    { _id, clientId },
+    { _id },
     // on met à jour la valeur du statut
     // { $set: { statut: newhashedPass } },
     {
