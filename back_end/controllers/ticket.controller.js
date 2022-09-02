@@ -172,7 +172,7 @@ export async function updateSenderReplyController(req, res) {
       });
     }
     // reponse en cas d'erreur
-    res.json({
+    return res.json({
       status: "erreur",
       message: "impossible d'ajouter votre message",
     });
