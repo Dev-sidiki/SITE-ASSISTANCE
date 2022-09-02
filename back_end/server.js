@@ -4,6 +4,7 @@ import express from "express";
 import mongoose from "mongoose";
 import helmet from "helmet";
 import morgan from "morgan";
+import cors from "cors";
 import { authMiddleware } from "./middleware/middleware.js";
 
 // on importe les element de nos userRoutes
@@ -22,6 +23,20 @@ const { APP_PORT, APP_HOSTNAME, APP_DB_USER_PASS, APP_CLIENT_URL } =
 //  on initialise notre application express
 const app = express();
 
+// on parametre les authoristaion d'accès
+// pour être plus précis
+const corsOptions = {
+  // on autorise les requete depuis notre front(localhost3000)
+  origin: APP_CLIENT_URL,
+  credentials: true,
+  // pour que les requête marche mieux
+  // trouver sur slacoverflow
+  allowedHeaders: ["sessionId", "Content-Type"],
+  exposedHeaders: ["sessionId"],
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  preflightContinue: false,
+};
+
 // ==========
 // MIDDLEWARES
 // ==========
@@ -36,6 +51,11 @@ app.use(helmet());
 // l'affichage tiny nous précise le type , statut et le temps de la requête
 // possibilité de parametrer l'affichage a l'interieur de la parenthèse selon les besoins
 app.use(morgan("tiny"));
+
+// middleware pour autoriser l'accès a notre site
+// on precise dans les parametre de cors ceux qui ont
+// le droit de faire les requete sur notre site
+app.use(cors(corsOptions));
 
 // middlewares Pour récupérer les données POST en Express simplement
 // Une fois que vous avez mis en place les deux ou une des méthodes ci-dessus vous pouvez les récupérer avec req.body sous forme d'un JSON
