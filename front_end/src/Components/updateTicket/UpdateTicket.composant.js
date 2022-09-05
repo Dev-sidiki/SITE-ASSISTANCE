@@ -2,24 +2,19 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Form, Button } from "react-bootstrap";
 
+// ce composant retourne le formulaire de reponse a un ticket
 const UpdateTicket = ({ _id }) => {
   return (
     <div>
       <Form>
-        <Form.Label>Reply</Form.Label>
+        <Form.Label>Reponse</Form.Label>
         <Form.Text>
-          Please reply your message here or update the ticket
+          Veillez saisir votre reponse dans le champ ci-dessous
         </Form.Text>
-        <Form.Control
-          //   value={message}
-          //   onChange={handleOnChange}
-          as="textarea"
-          row="5"
-          name="detail"
-        />
+        <Form.Control as="textarea" row="5" name="detail" />
         <div className="text-right mt-3 mb-3">
           <Button variant="info" type="submit">
-            Reply
+            Repondre
           </Button>
         </div>
       </Form>
