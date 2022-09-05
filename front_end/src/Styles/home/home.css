@@ -1,0 +1,11 @@
+.accueil-page {
+  height: 78vh;
+  /* pour centrer le formulaire de connexion sur la page d'acueil */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-box {
+  box-shadow: 0px 0px 15px -5px black;
+}
