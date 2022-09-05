@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import MailIcon from "@material-ui/icons/Mail";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 
 // composant de creation de notre formulaire de connexion
-const Login = ({ typeForm }) => {
+const Login = () => {
   // les variables necessaire a la connexion
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   //fonction qui met a jou le champ de connexion
   const handleOnChange = (e) => {
@@ -32,22 +32,18 @@ const Login = ({ typeForm }) => {
   // lorque on soumet le formulaire
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    // les variable de gestions des erreurs des different champs
-    const emailError = document.querySelector(".email.error");
-    const passwordError = document.querySelector(".password.error");
-    // on reinjecte des string vite si y'a pas d'erreur
-    passwordError.innerHTML = "";
-    emailError.innerHTML = "";
 
     if (!password || !email) {
-      if (!email) {
-        emailError.innerHTML = "Le champ email est obligatoire";
-        return;
-      }
+      // if (!email) {
+      //   setError("error mail");
+      //   console.log(error);
+      //   return error;
+      // }
 
       if (!password) {
-        passwordError.innerHTML = "Le champ mot de passe est obligatoire";
-        return;
+        setError("error password");
+        console.log(error);
+        return error;
       }
     }
   };
@@ -70,8 +66,11 @@ const Login = ({ typeForm }) => {
                 placeholder="Saisissez votre email"
                 required
               />
+              {/* {error && error} */}
             </Form.Group>
+
             <br />
+
             {/* on cree le champ password */}
             <Form.Group className="text-dark ">
               <VpnKeyIcon /> <Form.Label> Mot de passe</Form.Label>
@@ -81,7 +80,6 @@ const Login = ({ typeForm }) => {
                 onChange={(e) => handleOnChange(e)}
                 value={password}
                 placeholder="Entrez votre mot de passe"
-                required
               />
             </Form.Group>
             <br />
@@ -120,12 +118,6 @@ const Login = ({ typeForm }) => {
       </Row>
     </Container>
   );
-};
-
-// pour etre sur que on n'envoi une fonction en prop
-// cela evite a app de planter
-Login.propTypes = {
-  typeForm: PropTypes.func.isRequired,
 };
 
 export default Login;
