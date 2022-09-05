@@ -24,19 +24,21 @@ function App() {
           <Route exact path="/modif-password">
             <UpdatePasswordPage />
           </Route>
-
-          <Route exact path="/dashboard">
-            <DefaultLayout children={<Dashboard />} />
-          </Route>
-          <Route exact path="/ajout-ticket">
-            <DefaultLayout children={<AddTicket />} />
-          </Route>
-          <Route exact path="/ticket/:tId">
-            <DefaultLayout children={<Ticket />} />
-          </Route>
-          <Route exact path="/list-tickets">
-            <DefaultLayout children={<ListTicket />} />
-          </Route>
+          {/* creation de la mise en page de nos composant route*/}
+          <DefaultLayout>
+            <Route exact path="/dashboard">
+              <Dashboard />
+            </Route>
+            <Route exact path="/ajout-ticket">
+              <AddTicket />
+            </Route>
+            <Route exact path="/ticket/:tId">
+              <Ticket />
+            </Route>
+            <Route exact path="/list-tickets">
+              <ListTicket />
+            </Route>
+          </DefaultLayout>
 
           <Route path="*">
             <h1>404 Page not found</h1>
