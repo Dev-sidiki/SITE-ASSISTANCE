@@ -1,12 +1,12 @@
 import React from "react";
-import UpdatePassword from "../../Components/password-reset/UpdatePassword.composant.js";
+import RecupCodePin from "../../Components/password-reset/RecupCodePin.composant.js";
 import "../../Styles/updatePassword/updatePassword.css";
 import logoDsi from "../../Assets/image/logoDsi.png";
 import Footer from "../../layout/partials/Footer.composant.js";
 import { Link } from "react-router-dom";
 
-// le composant qui affiche la page de modification du mot de passe
-const UpdatePasswordPage = () => {
+// le composant qui contient la page de recuperation du codepin
+const RecupPinPage = () => {
   return (
     <div>
       {" "}
@@ -21,35 +21,25 @@ const UpdatePasswordPage = () => {
         </div>
       </header>
       <div className="entry-page bg-secondary">
-        {/* le formulaire de modification du mot de passe */}
+        {/* le formulaire de recupertion du codepin */}
         <div className="mt-4 p-5 bg-light text-white rounded form-box">
-          <UpdatePassword />
+          <RecupCodePin />
           <br />
           <div className="text-center text-dark">
-            Pour vous connectez à nouveau?
+            Pour vous changez votre de mot passe?
             <br />
-            {/* le lien pour aller a la page d'accueil(page de connexion) */}
-            {/* après la modification du mot de passe */}
-            <Link to={"/"} className="text-dark">
-              Cliquez ici
-            </Link>
-          </div>
-          <br />
-          <div className="text-center text-dark">
-            Pour avoir à nouveau un autre codepin?
-            <br />
-            {/* le lien pour aller a la page d'accueil(page de connexion) */}
-            {/* après la modification du mot de passe */}
-            <Link to={"/recup-pin"} className="text-dark">
+            {/* le lien vers la page de modification du mot de passe */}
+            {/* après avoir recupérer le codepin */}
+            <Link to={"/modif-password"} className="text-dark">
               Cliquez ici
             </Link>
           </div>
         </div>
       </div>
-      {/* pied de page */}
+      {/* le pied de page */}
       <Footer />
     </div>
   );
 };
 
-export default UpdatePasswordPage;
+export default RecupPinPage;

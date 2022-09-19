@@ -1,17 +1,68 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Form, Button } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  getSingleTicketInfo,
+  responseTicket,
+} from "../../Actions/ticketAction.js";
 
-// ce composant retourne le formulaire de reponse a un ticket
+// ce composant retourne le formulaire pour reponse a un ticket
 const UpdateTicket = ({ _id }) => {
+  //on recupere les info sur le user connecté
+  const { user } = useSelector((state) => state.userReducer);
+  // console.log(user.nom);
+
+  // on recupere les données du ticket du user connecté
+  const { selectedTicket } = useSelector((state) => state.ticketReducer);
+  // console.log(selectedTicket._id);
+
+  // la variable qui dechenche une action
+  const dispatch = useDispatch();
+
+  // on affecte le nom du user a la varaiable expediteur
+  // de façon automatique
+  const expediteur = user.nom;
+
+  // la variable qui contient la reponse de l'expéditeur
+  const [message, setMessage] = useState("");
+
+  //fonction qui met à jour le champ de connexion
+  const handleOnChange = (e) => {
+    setMessage(e.target.value);
+    console.log("message:" + message);
+  };
+
+  // la fonction qui sera exécuté lorsque le formulaire sera soumis
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+
+    message &&
+      expediteur &&
+      dispatch(responseTicket(_id, message, expediteur)) &&
+      dispatch(getSingleTicketInfo(selectedTicket._id)) &&
+      setMessage("");
+  };
+
   return (
     <div>
-      <Form>
+      <Form autoComplete="off" onSubmit={handleOnSubmit}>
+        <br />
         <Form.Label>Reponse</Form.Label>
+        <br />
+        {/* texte d'indication */}
         <Form.Text>
           Veillez saisir votre reponse dans le champ ci-dessous
         </Form.Text>
-        <Form.Control as="textarea" row="5" name="detail" />
+        {/* champ de saisi du message*/}
+        <Form.Control
+          as="textarea"
+          row="5"
+          name="message"
+          onChange={handleOnChange}
+          value={message}
+        />
+        {/* bouton de soumission de la reponse */}
         <div className="text-right mt-3 mb-3">
           <Button variant="info" type="submit">
             Repondre
@@ -22,6 +73,7 @@ const UpdateTicket = ({ _id }) => {
   );
 };
 
+// pour préciser que notre prop(_id) est obligatoirement un string
 UpdateTicket.propTypes = {
   _id: PropTypes.string.isRequired,
 };

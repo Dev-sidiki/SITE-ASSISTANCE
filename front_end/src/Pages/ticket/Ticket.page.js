@@ -1,39 +1,106 @@
-import React from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { Container, Row, Col, Button, Spinner, Alert } from "react-bootstrap";
 import CurrentPage from "../../Components/currentPage/CurrentPage.composant.js";
+import ConversationHistory from "../../Components/conversationHistory/ConversationHistory.composant.js";
 import UpdateTicket from "../../Components/updateTicket/UpdateTicket.composant.js";
+import {
+  getSingleTicketInfo,
+  updateTicketStatusClosed,
+  deleteTicket,
+} from "../../Actions/ticketAction.js";
+import { timestampParser } from "../../utils/dateParser.js";
 
 // le composant qui m'affiche le contenu d'un ticket
 const Ticket = () => {
+  // recuperation du parametre
+  const { tId } = useParams();
+  // console.log(tId);
+
+  // la variable qui declenche une action
+  const dispatch = useDispatch();
+
+  const [deleteSuccess, setDeleteSucces] = useState("");
+  const [closedSuccess, setCloseSucces] = useState("");
+  const { selectedTicket, isLoading, responseMessage } = useSelector(
+    (state) => state.ticketReducer
+  );
+
+  console.log(selectedTicket);
+
+  useEffect(() => {
+    dispatch(getSingleTicketInfo(tId));
+  }, [dispatch, tId]);
+
   return (
     <Container>
       <Row>
+        {/* pour préciser la page courante */}
         <Col>
           <CurrentPage page="Ticket" />
         </Col>
       </Row>
 
       <Row>
-        <Col></Col>
+        <Col>
+          {isLoading && <Spinner variant="primary" animation="border" />}
+          {closedSuccess && <Alert variant="success">{closedSuccess}</Alert>}
+          {deleteSuccess && <Alert variant="success">{deleteSuccess}</Alert>}
+        </Col>
       </Row>
       <Row>
         <Col className="text-weight-bolder text-secondary">
-          <div className="subject">Sujet: a completer</div>
-          <div className="date">Date d'ouverture: a completer</div>
-          <div className="status">Statut: a completer </div>
+          <div>
+            <div className="subject">
+              Sujet:{selectedTicket.sujet && selectedTicket.sujet}{" "}
+            </div>
+            <div className="date">
+              Date d'ouverture:
+              {selectedTicket.createdAt &&
+                timestampParser(selectedTicket.createdAt)}
+            </div>
+            <div className="status">
+              Statut: {selectedTicket.statut && selectedTicket.statut}
+            </div>
+          </div>
         </Col>
-        <Col className="text-right">
-          <Button variant="outline-info">Close Ticket</Button>
-        </Col>
-      </Row>
-      <Row className="mt-4">
-        <Col></Col>
-      </Row>
-      <hr />
 
+        <Col className="text-right">
+          <Button
+            variant="outline-info"
+            onClick={() =>
+              dispatch(updateTicketStatusClosed(tId)) &&
+              setCloseSucces("Le ticket à été cloturé")
+            }
+            disabled={selectedTicket.statut === "Clôturé"}
+          >
+            Cloturé Ticket
+          </Button>
+          <Button
+            variant="outline-info"
+            onClick={() =>
+              dispatch(deleteTicket(tId)) &&
+              setDeleteSucces(
+                "Suppression effectué, ce ticket n'existe plus dans la liste des tickets"
+              )
+            }
+          >
+            Supprimer Ticket
+          </Button>
+        </Col>
+      </Row>
       <Row className="mt-4">
         <Col>
-          <UpdateTicket />
+          {selectedTicket.conversations && (
+            <ConversationHistory message={selectedTicket.conversations} />
+          )}
+        </Col>
+      </Row>
+      <hr />
+      <Row className="mt-4">
+        <Col>
+          <UpdateTicket _id={tId} />
         </Col>
       </Row>
     </Container>

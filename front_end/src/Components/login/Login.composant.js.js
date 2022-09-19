@@ -1,16 +1,51 @@
-import React, { useState } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Button,
+  Alert,
+  Spinner,
+} from "react-bootstrap";
+
 import MailIcon from "@material-ui/icons/Mail";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
+import { getUserProfil } from "../../Actions/userAction.js";
+import { Link } from "react-router-dom";
+import { LOGIN_USER } from "../../Actions/userAction.js";
 
-// composant de creation de notre formulaire de connexion
+// composant qui contient notre formulaire de connexion
 const Login = () => {
   // les variables necessaire a la connexion
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
-  //fonction qui met a jou le champ de connexion
+  // variable de gestion des erreurs lors de la connexion
+  const [errorMail, setErrorMail] = useState("");
+  const [errorPassword, setErrorPassword] = useState("");
+
+  // la variable qui declenche une action
+  const dispatch = useDispatch();
+
+  // variable de navigation
+  const history = useHistory();
+
+  const { isLoading, isConnect } = useSelector((state) => state.userReducer);
+
+  // cette fonction sera lancé après la soumission du formulaire
+  useEffect(() => {
+    // on vérifie si le user est connecté et que on nas un token
+    if (isConnect && localStorage.getItem("token")) {
+      // on recupere son profil et se redirige au tableau de bord
+      dispatch(getUserProfil()) && history.push("/dashboard");
+    }
+  }, [isConnect, dispatch, history]);
+
+  //fonction qui met a jour le champ de connexion
   const handleOnChange = (e) => {
     const { name, value } = e.target;
 
@@ -30,21 +65,55 @@ const Login = () => {
 
   //   la fonction qui s'execute
   // lorque on soumet le formulaire
-  const handleOnSubmit = async (e) => {
+  const handleOnSubmit = (e) => {
     e.preventDefault();
 
     if (!password || !email) {
-      // if (!email) {
-      //   setError("error mail");
-      //   console.log(error);
-      //   return error;
-      // }
+      // message si tous les champs sont vides
+      setErrorMail("Veuillez remplir tous les champs s'il vous plaît");
+    } else {
+      // on fait la requete si on remplir les champs
+      axios({
+        method: "post",
+        url: `${process.env.REACT_APP_API_URL}api/user/login`,
+        // withCredentials: true,
+        data: { email, password },
+      })
+        .then((res) => {
+          console.log(res.data);
 
-      if (!password) {
-        setError("error password");
-        console.log(error);
-        return error;
-      }
+          // si erreur d'exécution de la requête
+          if (res.data.errors) {
+            // on stocke l'erreur dans la variable de gestion
+            // des erreurs selon l'erreur en question
+            setErrorMail(res.data.errors.email);
+            setErrorPassword(res.data.errors.password);
+          }
+
+          // si la requête a été effectué
+          if (res.data.statut === "connecté") {
+            // on efface les message d'erreur au cas ou il en a
+            setErrorMail("");
+            setErrorPassword("");
+
+            //on crée un token dans nos bases de donnée local
+            localStorage.setItem("token", res.data.token);
+            // console.log(res.data.token);
+            sessionStorage.setItem("token", res.data.token);
+            // console.log(res.data.loggedUser.token);
+
+            // on stocke le resultat dans le store dans la variable GET_TICKET du reducer
+            // grace au payload afin de les traités dans le reducer
+            // selon nos besoin
+            dispatch({
+              type: LOGIN_USER,
+              payload: { email, password },
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
   return (
@@ -53,7 +122,10 @@ const Login = () => {
         <Col>
           <h1 className="text-dark text-center">Authentification Client</h1>
           <hr />
-          {/* {error && <Alert variant="danger">{error}</Alert>} */}
+          {/* on affiche les messages d'erreur si il en a */}
+          {errorMail && <Alert variant="danger">{errorMail}</Alert>}
+          {errorPassword && <Alert variant="danger">{errorPassword}</Alert>}
+
           <Form autoComplete="off" onSubmit={handleOnSubmit}>
             {/* on creé le champ email */}
             <Form.Group className="text-dark ">
@@ -64,9 +136,7 @@ const Login = () => {
                 value={email}
                 onChange={(e) => handleOnChange(e)}
                 placeholder="Saisissez votre email"
-                required
               />
-              {/* {error && error} */}
             </Form.Group>
 
             <br />
@@ -83,7 +153,7 @@ const Login = () => {
               />
             </Form.Group>
             <br />
-            {/* on creer le bouton pour soumettre */}
+            {/* on creer le bouton pour se connecter */}
             <Button
               className="d-grid gap-2 col-6 mx-auto"
               type="submit"
@@ -91,7 +161,7 @@ const Login = () => {
             >
               Se Connecter
             </Button>
-            {/* {isLoading && <Spinner variant="primary" animation="border" />} */}
+            {isLoading && <Spinner variant="primary" animation="border" />}
           </Form>
           <hr />
         </Col>
@@ -101,19 +171,21 @@ const Login = () => {
         <Col className="text-center">
           <span className="text-dark">Mot de passe oublié ?</span>
           <br />
-          <a href="/modif-password" className="text-dark">
+          {/* lien pour changer son mot de passe en cas d'oublie */}
+          <Link to={"/recup-pin"} className="text-dark">
             {" "}
             cliquez ici?
-          </a>
+          </Link>
         </Col>
       </Row>
       <Row className="py-4">
         <Col className="text-center">
           <span className="text-dark"> Êtes-vous nouveau sur ce site?</span>
           <br />
-          <a href="/inscription" className="text-dark">
+          {/* lien pour aller s'inscrire sur notre site */}
+          <Link to={"/inscription"} className="text-dark">
             Inscrivez-vous Maintenant
-          </a>
+          </Link>
         </Col>
       </Row>
     </Container>
