@@ -72,6 +72,28 @@ on tape la command suivante: npm install nodemailer --save
 
 # """""""""""""""""""""""""""""""""""""""""" LES DEPENDANCES LIÉS A LA PARTIE FRONT-END """""""""""""""""""""""""""""""""""""""""""
 
+# on crée notre app react
+
+# le nom du projet sera le nom du dossier avec le .
+
+on tape la commande suivante : npx create-react-app .
+
+# on install bootstrap pour le style
+
+on tape la commande suivante: npm install react-bootstrap bootstrap
+
+# on install react-router-dom pour la navigation
+
+on tape la commande suivante: npm i -s react-router-dom ou npm install react-router-dom@5.2.0 (en cas de problème avec la navigation)
+
+# on install axios
+
+on tape la commande suivante: npm i -s axios
+
+# on intall le module pour la validé des prop qu'on donne aux composant
+
+on tape la commande suivante: npm install --save prop-types
+
 # REMARQUE:
 
 # export default function x ()
