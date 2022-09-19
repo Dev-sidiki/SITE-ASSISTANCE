@@ -11,7 +11,6 @@ import { authMiddleware } from "./middleware/middleware.js";
 import userRoutes from "./routes/user.routes.js";
 import ticketRoutes from "./routes/ticket.routes.js";
 import tokenRoutes from "./routes/token.routes.js";
-
 import afficheError from "./utils/catchError.js";
 
 // pour la gestion des variable d'environnement
@@ -31,7 +30,9 @@ const corsOptions = {
   credentials: true,
   // pour que les requête marche mieux
   // trouver sur slacoverflow
-  allowedHeaders: ["sessionId", "Content-Type"],
+  // il faut preciser le nom de son token dans le allowedHeaders
+  // dans mon cas c'est "Authorization"
+  allowedHeaders: ["Authorization", "Content-Type"],
   exposedHeaders: ["sessionId"],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   preflightContinue: false,

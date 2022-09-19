@@ -1,75 +1,71 @@
 import mongoose from "mongoose";
 
 // creation du des champs de la collection tickets
-const TicketSchema = new mongoose.Schema({
-  // client associé a ce ticket
-  clientId: {
-    // string
-    type: mongoose.Schema.Types.ObjectId,
-    // obligatoire
-    required: true,
-  },
-  // le probleme en question
-  sujet: {
-    type: String,
-    //pour supprimer les espacement en fin et debut de ligne
-    trim: true,
-    // longueur max
-    maxlength: 200,
-    // obligatoire
-    required: true,
-    // aucun sujet par defaut
-    default: "",
-  },
-  //date d'ouverture du ticket
-  // il s'affichera a chaque fois que on aura un ticket inséré
-  dateOuverture: {
-    // type date
-    type: Date,
-    // obligatoire
-    required: true,
-    // affiche la date a laquelle tu crée le ticket
-    default: Date.now(),
-  },
-  // l'etat actuel du ticket
-  statut: {
-    // string
-    type: String,
-    // longueur max
-    maxlength: 500,
-    // obligaoire
-    required: true,
-    // le message par defaut
-    default: "En cours de traitement par l'operateur",
-  },
-
-  //l'historique des concersations
-  conversations: [
-    {
-      // celui ou celle qui envoi le message (client ou operateur)
-      expediteur: {
-        type: String,
-        maxlength: 50,
-        required: true,
-        default: "",
-      },
-      //le message en question
-      message: {
-        type: String,
-        maxlength: 1000,
-        required: true,
-        default: "",
-      },
-      // date de reponse du message
-      dateEnvoi: {
-        type: Date,
-        required: true,
-        // affiche la date a laquelle tu envoie le ticket ou la reponse
-        default: Date.now(),
-      },
+const TicketSchema = new mongoose.Schema(
+  {
+    // client associé a ce ticket
+    clientId: {
+      // string
+      type: mongoose.Schema.Types.ObjectId,
+      // obligatoire
+      required: true,
     },
-  ],
-});
+    // le probleme en question
+    sujet: {
+      type: String,
+      //pour supprimer les espacement en fin et debut de ligne
+      trim: true,
+      // longueur max
+      maxlength: 200,
+      // obligatoire
+      required: true,
+      // aucun sujet par defaut
+      default: "",
+    },
+    // l'etat actuel du ticket
+    statut: {
+      // string
+      type: String,
+      // longueur max
+      maxlength: 500,
+      // obligaoire
+      required: true,
+      // le message par defaut
+      default: "En cours de traitement par l'operateur",
+    },
+
+    //l'historique des concersations
+    conversations: [
+      {
+        // celui ou celle qui envoi le message (client ou operateur)
+        expediteur: {
+          type: String,
+          maxlength: 50,
+          required: true,
+          default: "",
+        },
+        //le message en question
+        message: {
+          type: String,
+          maxlength: 1000,
+          required: true,
+          default: "",
+        },
+        // date de reponse du message
+        dateEnvoi: {
+          type: Date,
+          required: true,
+          // affiche la date a laquelle tu envoie le ticket ou la reponse
+          default: new Date().getTime(),
+        },
+      },
+    ],
+  },
+  {
+    // met la date d'ajout et de modification automatiqment
+    timestamps: true,
+  }
+);
 
 // creation de fontions statique pour les donnée (CRUD users)
 TicketSchema.static("getTickets", getTickets);

@@ -30,7 +30,7 @@ const send = async (info) => {
 
 // fonction qui gere la procedure du courrier electronique
 // il contient tous les infos sur le courrier à envoyé
-export const emailProcess = ({ email, pin, type, verificationLink = "" }) => {
+export const emailProcess = ({ email, pin, type }) => {
   let info = "";
   switch (type) {
     case "recup-code-pin":
@@ -62,21 +62,6 @@ export const emailProcess = ({ email, pin, type, verificationLink = "" }) => {
        
       <p>votre mot de passe à été modifié avec succès</p>`, // message en format html
       };
-
-      send(info);
-      break;
-
-      // case "new-user-confirmation-required":
-      //   info = {
-      //     from: '"KSTransport <shyann.paucek42@ethereal.email>', //expéditeur
-      //     to: email, // destinataires
-      //     subject: "Please verify your new user", // sujet du message
-      //     text: "Please follow the link to very your account before you can login", // message en texte brut
-      //     html: `<b>Hello </b>
-      //     <p>Please follow the link to very your account before you can login</p>
-      //     <p>${verificationLink}</P>
-      //     `, // version html du message
-      //   };
 
       send(info);
       break;

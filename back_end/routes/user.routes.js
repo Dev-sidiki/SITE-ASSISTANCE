@@ -10,7 +10,7 @@ import {
 } from "../controllers/user.controller.js";
 import { authMiddleware } from "../middleware/middleware.js";
 
-// pour gerer les routes
+//initialisation de la variable de gestion des routes
 const router = express.Router();
 
 // ==========
@@ -25,10 +25,10 @@ router.post("/login", loginUserController);
 router.delete("/logout", authMiddleware, logoutUserController);
 
 // ==========
-// USER DATABASE
+// USERS DATABASE
 // ==========
 
-//route  d'affichage des info d'un user
+//route  d'affichage des info d'un user connecté
 router.get("/", authMiddleware, getUserInfoController);
 //route de creation du codepin d'un user
 router.post("/reset-password", recupPinController);

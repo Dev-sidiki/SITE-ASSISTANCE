@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import isEmail from "validator/lib/isEmail.js";
-import bcrypt from "bcrypt";
+// import bcrypt from "bcrypt";
 
-// une fonction qui contient les champs de la table de notre base de donnée
+// une fonction qui contient les champs de la table users de notre base de donnée
 const userSchema = new mongoose.Schema(
   {
     nom: {
@@ -55,11 +55,13 @@ const userSchema = new mongoose.Schema(
       // obligatoire
       required: true,
     },
+
     telephone: {
       // des nombres
       type: Number,
-      maxlength: 15,
+      maxlength: 150,
     },
+
     // le jeton
     tokens: {
       token: {
@@ -99,7 +101,7 @@ userSchema.static("getUserById", getUserById);
 userSchema.static("refreshToken", refreshToken);
 userSchema.static("updatePassword", updatePassword);
 userSchema.static("verifyUser", verifyUser);
-// userSchema.static("deleteUser", deleteUser);
+userSchema.static("deleteUser", deleteUser);
 
 //fonction qui permet de cripter le mot de passe
 // avant de le mettre dans la base de donnée grace à la methdode pre
@@ -117,15 +119,15 @@ userSchema.static("verifyUser", verifyUser);
 // ==================================
 
 // fonction appelé par le controller pour l'inscription d'un nouveau utilisateur dans la base de donneé
-async function createUser(nom, societe, addresse, telephone, email, password) {
+async function createUser(nom, email, password, societe, addresse, telephone) {
   // methode pour la creation d'un modele
   return await this.create({
     nom,
+    email,
+    password,
     societe,
     addresse,
     telephone,
-    email,
-    password,
   });
 }
 
@@ -186,12 +188,12 @@ async function verifyUser(_id, email) {
   return newUser;
 }
 
-// // la fonction qui supprime les info d'un utilisateur
-// // depuis la base de donnée
-// async function deleteUser(_id) {
-//   const deleteUserInfo = await this.deleteOne({ _id }).exec();
-//   return deleteUserInfo;
-// }
+// la fonction qui supprime les info d'un utilisateur
+// depuis la base de donnée
+async function deleteUser(_id) {
+  const deleteUserInfo = await this.deleteOne({ _id }).exec();
+  return deleteUserInfo;
+}
 
 // Creation d'un Model(exemple) mongoose sur la base du Schéma
 // Au cas ou je ne m'étais pas le nom de la collection alors on aura Users comme le nom de collection par defaut

@@ -9,7 +9,12 @@ import {
   updateStatusCloseController,
 } from "../controllers/ticket.controller.js";
 
+//initialisation de la variable de gestion des routes
 const router = express.Router();
+
+// ==========
+// TICKETS DATABASE
+// ==========
 
 // route de creation d'un ticket
 router.post("/", authMiddleware, createTicketController);

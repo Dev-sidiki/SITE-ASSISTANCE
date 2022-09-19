@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import isEmail from "validator/lib/isEmail.js";
 
-//une fonction qui contient les champs de la table de notre base de donnée
+//une fonction qui contient les champs de la table codepins de notre base de donnée
 // c'est notre modele de reinitialisation
 const updatePinSchema = new mongoose.Schema(
   {
