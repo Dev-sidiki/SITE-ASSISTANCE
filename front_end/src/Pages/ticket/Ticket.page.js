@@ -82,7 +82,7 @@ const Ticket = () => {
             onClick={() =>
               dispatch(deleteTicket(tId)) &&
               setDeleteSucces(
-                "Suppression effectué, ce ticket n'existe plus dans la liste des tickets"
+                "Suppression effectuée, ce ticket n'existe plus dans la liste des tickets"
               )
             }
           >
