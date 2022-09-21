@@ -82,7 +82,7 @@ const AddTicket = () => {
   return (
     <div className="add-new-ticket bg-light mt-4 p-5 bg-light text-white rounded">
       {/* titre de lapage */}
-      <h1 className="text-dark text-center">Ajout de nouveu ticket</h1>
+      <h1 className="text-dark text-center">Ajout de nouveau ticket</h1>
       <hr />
       <Row>
         <Col>

@@ -19,7 +19,7 @@ const Inscription = () => {
     email: "",
     password: "",
     societe: "",
-    addresse: "",
+    adresse: "",
     telephone: "",
     confirmPass: "",
   };
@@ -62,7 +62,7 @@ const Inscription = () => {
     const terms = document.getElementById("custom-switch");
 
     // destructuring de notre newuser
-    const { nom, email, password, societe, addresse, telephone, confirmPass } =
+    const { nom, email, password, societe, adresse, telephone, confirmPass } =
       newUser;
 
     if (password !== confirmPass || !terms.checked) {
@@ -85,7 +85,7 @@ const Inscription = () => {
         setErrorMail("");
         setControlPassword("");
         // message si la case n'a pas été coché
-        setErrorChecked("Veillez Acceptez les condtions d'utilisation");
+        setErrorChecked("Veuillez Acceptez les condtions d'utilisation");
       }
     } else {
       // on fait la requête après les contrôles
@@ -95,7 +95,7 @@ const Inscription = () => {
         withCredentials: true,
         // bien inscrit les données dans l'ordre comme dans le modele
         // pour eviter choisi les erreurs d'affectation des données
-        data: { nom, email, password, societe, addresse, telephone },
+        data: { nom, email, password, societe, adresse, telephone },
       })
         .then((res) => {
           console.log(res.data);
@@ -128,7 +128,7 @@ const Inscription = () => {
             // selon nos besoin
             dispatch({
               type: INSCRIPTION_USER,
-              payload: { nom, societe, addresse, telephone, email, password },
+              payload: { nom, societe, adresse, telephone, email, password },
             });
           }
         })
@@ -191,7 +191,7 @@ const Inscription = () => {
             <br />
             {/* champ pour saisir son entreprise */}
             <Form.Group className="text-dark">
-              <BusinessIcon /> <Form.Label>Societe</Form.Label>
+              <BusinessIcon /> <Form.Label>Sociéte</Form.Label>
               <Form.Control
                 type="text"
                 name="societe"
@@ -217,13 +217,13 @@ const Inscription = () => {
             <br />
             {/* champ pour saisir son adresse */}
             <Form.Group className="text-dark">
-              <LocationCityIcon /> <Form.Label>Addresse</Form.Label>
+              <LocationCityIcon /> <Form.Label>Adresse</Form.Label>
               <Form.Control
                 type="text"
-                name="addresse"
+                name="adresse"
                 placeholder="Entrez votre adresse"
                 required
-                value={newUser.addresse}
+                value={newUser.adresse}
                 onChange={handleOnChange}
               />
             </Form.Group>

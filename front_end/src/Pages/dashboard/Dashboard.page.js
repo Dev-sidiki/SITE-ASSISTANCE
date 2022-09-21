@@ -27,7 +27,7 @@ const Dashboard = () => {
 
   return (
     <Container>
-      <div> Bienvenu {user.nom}</div>
+      <div> Bienvenue {user.nom}</div>
       <Row>
         {/* on met en valeur la page actuel */}
         <Col>
@@ -53,7 +53,7 @@ const Dashboard = () => {
         <Col className="text-center  mb-3">
           <div>Nombre total de ticket: {totlatTickets}</div>
           <br />
-          <div>Nombre total de ticket en entente: {pendingTickets.length}</div>
+          <div>Nombre total de ticket en attente: {pendingTickets.length}</div>
         </Col>
       </Row>
       <Row>

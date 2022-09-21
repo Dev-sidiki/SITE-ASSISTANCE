@@ -23,7 +23,7 @@ const Ticket = () => {
 
   const [deleteSuccess, setDeleteSucces] = useState("");
   const [closedSuccess, setCloseSucces] = useState("");
-  const { selectedTicket, isLoading, responseMessage } = useSelector(
+  const { selectedTicket, isLoading } = useSelector(
     (state) => state.ticketReducer
   );
 
@@ -75,7 +75,7 @@ const Ticket = () => {
             }
             disabled={selectedTicket.statut === "Clôturé"}
           >
-            Cloturé Ticket
+            Clôturer Ticket
           </Button>
           <Button
             variant="outline-info"

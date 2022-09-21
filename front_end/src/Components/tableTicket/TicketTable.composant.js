@@ -21,11 +21,22 @@ const TicketTable = () => {
       {/* entete de la table */}
       <thead>
         <tr>
-          <th>id</th>
-          <th>Sujet</th>
-          <th>Statut</th>
-          <th>Date d'ouverture</th>
-          <th>Voir detail</th>
+          {/* <th>id</th> */}
+
+          <th>
+            {" "}
+            <center>Sujet</center>
+          </th>
+          <th>
+            <center>Statut </center>
+          </th>
+          <th>
+            <center>Date d'ouverture </center>
+          </th>
+          <th>
+            {" "}
+            <center>Voir detail </center>
+          </th>
         </tr>
       </thead>
       {/* le contenu des tables(les differents tickets) */}
@@ -33,7 +44,7 @@ const TicketTable = () => {
         {searchListeTickets && searchListeTickets.length > 0 ? (
           searchListeTickets.map((row) => (
             <tr key={row._id}>
-              <td>{row._id}</td>
+              {/* <td>{row._id}</td> */}
               <td>{row.sujet}</td>
               <td>{row.statut}</td>
               <td>{row.createdAt && timestampParser(row.createdAt)}</td>

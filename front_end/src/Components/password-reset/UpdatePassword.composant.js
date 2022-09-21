@@ -63,6 +63,7 @@ const UpdatePassword = () => {
       setModifSuccess("");
       setControlCodepin("");
       setControlMail("");
+      setControlCodepinValidity("");
       // on affiche le message au cas ou ils correspondent pas
       setControlPassword("Les mots de passe ne correspondent pas");
     } else {

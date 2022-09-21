@@ -27,7 +27,7 @@ const SearchTicketForm = () => {
             <Form.Control
               name="recherche"
               onChange={handleOnChange}
-              placeholder="Recherche ..."
+              placeholder="Recherche par sujet..."
             />
           </Col>
         </Form.Group>
