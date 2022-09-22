@@ -26,7 +26,7 @@ const UpdatePasswordPage = () => {
           <UpdatePassword />
           <br />
           <div className="text-center text-dark">
-            Pour vous connectez à nouveau?
+            Pour vous connecter à nouveau?
             <br />
             {/* le lien pour aller a la page d'accueil(page de connexion) */}
             {/* après la modification du mot de passe */}
@@ -35,15 +35,6 @@ const UpdatePasswordPage = () => {
             </Link>
           </div>
           <br />
-          <div className="text-center text-dark">
-            Pour avoir à nouveau un autre codepin?
-            <br />
-            {/* le lien pour aller a la page d'accueil(page de connexion) */}
-            {/* après la modification du mot de passe */}
-            <Link to={"/recup-pin"} className="text-dark">
-              Cliquez ici
-            </Link>
-          </div>
         </div>
       </div>
       {/* pied de page */}

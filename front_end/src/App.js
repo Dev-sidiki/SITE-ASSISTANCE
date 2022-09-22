@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Home from "./Pages/home/Home.page.js";
 import InscriptionPage from "./Pages/inscription/Inscription.page.js";
@@ -9,23 +9,13 @@ import Ticket from "./Pages/ticket/Ticket.page";
 import ListTicket from "./Pages/listeTicket/ListTicket.page";
 import DefaultLayout from "./layout/DefaultLayout.js";
 import RecupPinPage from "./Pages/password-rest/RecupPinPage";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import "./Styles/App.css";
-import { getNewAccesUserProfil, getUserProfil } from "./Actions/userAction.js";
+// import { getNewAccesUserProfil, getUserProfil } from "./Actions/userAction.js";
 // Ce composant contient toute la logique de notre application
 function App() {
   const { user, isConnect } = useSelector((state) => state.userReducer);
-  const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   !user._id && dispatch(getUserProfil());
-
-  //   !sessionStorage.getItem("token") &&
-  //     localStorage.getItem("token") &&
-  //     dispatch(getNewAccesUserProfil());
-
-  //   !isConnect && sessionStorage.getItem("token");
-  // }, [dispatch, isConnect, user._id]);
   return (
     <div className="App">
       <Router>

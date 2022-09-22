@@ -3,7 +3,6 @@ import RecupCodePin from "../../Components/password-reset/RecupCodePin.composant
 import "../../Styles/updatePassword/updatePassword.css";
 import logoDsi from "../../Assets/image/logoDsi.png";
 import Footer from "../../layout/partials/Footer.composant.js";
-import { Link } from "react-router-dom";
 
 // le composant qui contient la page de recuperation du codepin
 const RecupPinPage = () => {
@@ -25,15 +24,6 @@ const RecupPinPage = () => {
         <div className="mt-4 p-5 bg-light text-white rounded form-box">
           <RecupCodePin />
           <br />
-          <div className="text-center text-dark">
-            Pour vous changez votre de mot passe?
-            <br />
-            {/* le lien vers la page de modification du mot de passe */}
-            {/* après avoir recupérer le codepin */}
-            <Link to={"/modif-password"} className="text-dark">
-              Cliquez ici
-            </Link>
-          </div>
         </div>
       </div>
       {/* le pied de page */}

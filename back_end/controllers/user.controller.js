@@ -9,7 +9,7 @@ import { hashPassword } from "../utils/hashCode.js";
 // fonction pour la creation d'un user
 export async function CreateUserController(req, res) {
   // on recupere les saisie
-  const { nom, email, password, societe, addresse, telephone } = req.body;
+  const { nom, email, password, societe, adresse, telephone } = req.body;
 
   // console.log(pseudo, email, password);
 
@@ -24,7 +24,7 @@ export async function CreateUserController(req, res) {
     email: "",
     password: "",
     telephone: "",
-    addresse: "",
+    adresse: "",
   };
 
   // les differentes contrôle a faire avant la creation d'un user
@@ -52,9 +52,9 @@ export async function CreateUserController(req, res) {
     return;
   }
 
-  if (!addresse) {
+  if (!adresse) {
     // message d'erreur si champ vide
-    errors.addresse = "le champs addresse est obligatoire";
+    errors.adresse = "le champs adresse est obligatoire";
     res.json({ errors });
     return;
   }
@@ -104,7 +104,7 @@ export async function CreateUserController(req, res) {
     email,
     hashPassword(password),
     societe,
-    addresse,
+    adresse,
     telephone
   );
 
@@ -137,7 +137,7 @@ export async function loginUserController(req, res) {
   const createToken = (id) => {
     return jwt.sign({ id }, APP_TOKEN_SECRET, {
       // durer de vie du jeton
-      expiresIn: "15m",
+      expiresIn: "45m",
     });
   };
 
@@ -333,7 +333,7 @@ export async function updatePasswordController(req, res) {
 
   if (!codepin) {
     // message d'erreur si champ vide
-    errors.codepin = "le codepin est obligatoire";
+    errors.codepin = "le code pin est obligatoire";
     res.json({ errors });
     return;
   }

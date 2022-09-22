@@ -6,9 +6,11 @@ import MailIcon from "@material-ui/icons/Mail";
 import { UPDATE_PASSWORD_USER } from "../../Actions/userAction";
 import { useDispatch } from "react-redux";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 // le composant qui affiche le formulaire de modification du mot de passe
 const UpdatePassword = () => {
+  const [show, setShow] = useState(true);
   // on declare un objet vide contenant les champs
   // necessaire pour la modification du mot de passe
   const initialState = {
@@ -91,6 +93,7 @@ const UpdatePassword = () => {
             setControlMail("");
             setControlCodepin("");
             setControlCodepinValidity(res.data.message);
+            setShow(false);
           }
 
           // si la modification a réussi
@@ -119,100 +122,123 @@ const UpdatePassword = () => {
   };
 
   return (
-    <Container>
-      <Row>
-        <Col>
-          <h1 className="text-dark">Modification de mot de passe</h1>
-        </Col>
-      </Row>
-      <hr />
-      <Row>
-        <Col>
-          {/* affichage des message selon l'erreur */}
-          {controlPassword && (
-            <Alert variant={"danger"}>{controlPassword}</Alert>
-          )}
-          {controlCodepin && <Alert variant={"danger"}>{controlCodepin}</Alert>}
+    <div>
+      {show ? (
+        <Container>
+          <Row>
+            <Col>
+              <h1 className="text-dark">Modification de mot de passe</h1>
+            </Col>
+          </Row>
+          <hr />
+          <Row>
+            <Col>
+              {/* affichage des message selon l'erreur */}
+              {controlPassword && (
+                <Alert variant={"danger"}>{controlPassword}</Alert>
+              )}
+              {controlCodepin && (
+                <Alert variant={"danger"}>{controlCodepin}</Alert>
+              )}
+              {/* {controlcodepinValidity && (
+                <Alert variant={"danger"}>{controlcodepinValidity}</Alert>
+              )} */}
+              {controlMail && <Alert variant={"danger"}>{controlMail}</Alert>}
+              {/* affichage du message de confimation en cas de succes */}
+              {modifSuccess && (
+                <Alert variant={"success"}>{modifSuccess}</Alert>
+              )}
+            </Col>
+          </Row>
+
+          <Row>
+            <Col>
+              <Form onSubmit={handleOnSubmit} id="form">
+                {/* creation du champ mail */}
+                <Form.Group className="text-dark">
+                  <MailIcon /> <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    placeholder="Entrez votre Email"
+                    value={newPasswordUser.email}
+                    onChange={handleOnChange}
+                    required
+                  />
+                </Form.Group>
+                <br />
+                {/* creation du champs codepin */}
+                <Form.Group className="text-dark">
+                  <VerifiedUserIcon /> <Form.Label>Code PIN</Form.Label>
+                  <Form.Control
+                    type="number"
+                    name="codepin"
+                    placeholder="Entrez le codepin"
+                    value={newPasswordUser.codepin}
+                    onChange={handleOnChange}
+                    required
+                  />
+                </Form.Group>
+                <br />
+                {/* creation du champ du nouveau mot de passe */}
+                <Form.Group className="text-dark">
+                  <VpnKeyIcon /> <Form.Label>Mot de passe</Form.Label>
+                  <Form.Control
+                    type="password"
+                    name="newPassword"
+                    minLength={6}
+                    placeholder="Entrez le nouveau mot de passe"
+                    value={newPasswordUser.newPassword}
+                    onChange={handleOnChange}
+                    required
+                  />
+                </Form.Group>
+                <br />
+                {/* creation du champ de confirmation du nouveau mot de passe */}
+                <Form.Group className="text-dark">
+                  <VpnKeyIcon />{" "}
+                  <Form.Label>Confimez votre mot de passe</Form.Label>
+                  <Form.Control
+                    type="password"
+                    name="confirmNewPassword"
+                    minLength={6}
+                    placeholder="Saisissez à nouveau le même mot de passe"
+                    value={newPasswordUser.confirmNewPassword}
+                    onChange={handleOnChange}
+                    required
+                  />
+                </Form.Group>
+
+                <br />
+                {/* bouton de soumission */}
+                <Button
+                  className="d-grid gap-2 col-3 mx-auto"
+                  variant="dark"
+                  type="submit"
+                >
+                  Changer
+                </Button>
+              </Form>
+            </Col>
+          </Row>
+        </Container>
+      ) : (
+        <div>
           {controlcodepinValidity && (
             <Alert variant={"danger"}>{controlcodepinValidity}</Alert>
           )}
-          {controlMail && <Alert variant={"danger"}>{controlMail}</Alert>}
-          {/* affichage du message de confimation en cas de succes */}
-          {modifSuccess && <Alert variant={"success"}>{modifSuccess}</Alert>}
-        </Col>
-      </Row>
-
-      <Row>
-        <Col>
-          <Form onSubmit={handleOnSubmit} id="form">
-            {/* creation du champ mail */}
-            <Form.Group className="text-dark">
-              <MailIcon /> <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                name="email"
-                placeholder="Entrez votre Email"
-                value={newPasswordUser.email}
-                onChange={handleOnChange}
-                required
-              />
-            </Form.Group>
+          <div className="text-center text-dark">
+            Pour avoir un nouveau code pin?
             <br />
-            {/* creation du champs codepin */}
-            <Form.Group className="text-dark">
-              <VerifiedUserIcon /> <Form.Label>Codepin</Form.Label>
-              <Form.Control
-                type="number"
-                name="codepin"
-                placeholder="Entrez le codepin"
-                value={newPasswordUser.codepin}
-                onChange={handleOnChange}
-                required
-              />
-            </Form.Group>
-            <br />
-            {/* creation du champ du nouveau mot de passe */}
-            <Form.Group className="text-dark">
-              <VpnKeyIcon /> <Form.Label>Mot de passe</Form.Label>
-              <Form.Control
-                type="password"
-                name="newPassword"
-                minLength={6}
-                placeholder="Entrez le nouveau mot de passe"
-                value={newPasswordUser.newPassword}
-                onChange={handleOnChange}
-                required
-              />
-            </Form.Group>
-            <br />
-            {/* creation du champ de confirmation du nouveau mot de passe */}
-            <Form.Group className="text-dark">
-              <VpnKeyIcon />{" "}
-              <Form.Label>Confimez votre mot de passe</Form.Label>
-              <Form.Control
-                type="password"
-                name="confirmNewPassword"
-                minLength={6}
-                placeholder="Saisissez à nouveau le même mot de passe"
-                value={newPasswordUser.confirmNewPassword}
-                onChange={handleOnChange}
-                required
-              />
-            </Form.Group>
-
-            <br />
-            {/* bouton de soumission */}
-            <Button
-              className="d-grid gap-2 col-3 mx-auto"
-              variant="dark"
-              type="submit"
-            >
-              Changer
-            </Button>
-          </Form>
-        </Col>
-      </Row>
-    </Container>
+            {/* le lien pour aller a la page d'accueil(page de connexion) */}
+            {/* après la modification du mot de passe */}
+            <Link to={"/recup-pin"} className="text-dark">
+              Cliquez ici
+            </Link>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
