@@ -1,41 +1,20 @@
-import nodemailer from "nodemailer";
+import mailgun from "mailgun-js";
 
-// creation du transporteur(celui qui envoi le mail) de façon automatique
-// depuis ce site : https://ethereal.email/create
-// il s'agit d'une fausse configuration avec des données éphémère
-const transporter = nodemailer.createTransport({
-  host: "smtp.ethereal.email",
-  port: 587,
-  auth: {
-    //creation d'un email éphémère
-    user: "shyann.paucek42@ethereal.email",
-    // creation de password
-    pass: "HBhYUFtP2hAgWMMFDp",
-  },
-});
-
-// la fonction qui permet d'envoyer le courrier au client
-const send = async (info) => {
-  // send mail with defined transport object
-  let result = await transporter.sendMail(info);
-
-  //   on affiche l'identifiant du mail envoyé
-  console.log("Message sent: %s", result.messageId);
-  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-  // Preview only available when sending through an Ethereal account
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(result));
-  // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-};
+const mailgunConfig = () =>
+  mailgun({
+    apiKey: process.env.APP_API_KEY_MAILGUN,
+    domain: process.env.APP_DOMAIN_MAILGUN,
+  });
 
 // fonction qui gere la procedure du courrier electronique
 // il contient tous les infos sur le courrier à envoyé
-export const emailProcess = ({ email, pin, type }) => {
+export const emailProcessMailgun = ({ email, pin, type }) => {
   let info = "";
   switch (type) {
     case "recup-code-pin":
       info = {
-        from: '"KSTransport <shyann.paucek42@ethereal.email>', //expéditeur
+        //from: '"KSTransport <shyann.paucek42@ethereal.email>', //expéditeur
+        from: "kabasidiki2020@gmail.com", //expéditeur
         to: email, // destinataires
         subject: "Code pine de réinitialisation du mot de passe", // Objet du mail
         text:
@@ -49,7 +28,7 @@ export const emailProcess = ({ email, pin, type }) => {
       <p></p>`, // message en format html
       };
 
-      send(info);
+      mailgunConfig().messages().send(info);
       break;
 
     case "modification-mot-de-passe":
@@ -63,7 +42,7 @@ export const emailProcess = ({ email, pin, type }) => {
       <p>votre mot de passe à été modifié avec succès</p>`, // message en format html
       };
 
-      send(info);
+      mailgunConfig().messages().send(info);
       break;
 
     default:
