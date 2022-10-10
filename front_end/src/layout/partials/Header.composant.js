@@ -1,30 +1,22 @@
-import React, { useEffect } from "react";
+import React from "react";
 import logoDsi from "../../Assets/image/logoDsi.png";
-import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { userLogout } from "../../Actions/userAction";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 // le composant qui contient l'entetede de notre page
 const Header = () => {
-  const { isConnect } = useSelector((state) => state.userReducer);
-
-  // variable de navigation
-  const history = useHistory();
+  const dispatch = useDispatch();
 
   //fonction pour la deconnexion
-  const logMeOut = () => {
+  const logMeOut = (e) => {
+    e.preventDefault();
     sessionStorage.removeItem("token");
     localStorage.removeItem("token");
-    userLogout() && history.push("/");
+    // en cas de confirmation on appel la fonction de supression
+    dispatch(userLogout());
+    window.location = "/";
   };
-
-  // cette fonction sera lancé pendant la deconnection
-  useEffect(() => {
-    if (!isConnect) {
-      logMeOut();
-    }
-  }, [isConnect, history]);
 
   return (
     <nav className="navbar navbar-light bg-secondary">
@@ -56,13 +48,13 @@ const Header = () => {
 
         <li>
           {/* liens de deconnexion */}
-          <a
-            href="/"
+          <Link
+            to={"/"}
             onClick={logMeOut}
             className="text-dark p-5 font-monospace fs-5"
           >
             Se deconnecter
-          </a>
+          </Link>
         </li>
       </ul>
     </nav>
