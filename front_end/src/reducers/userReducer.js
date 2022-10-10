@@ -1,6 +1,7 @@
 import {
   LOGIN_USER,
   GET_USER,
+  LOG_OUT,
   INSCRIPTION_USER,
   RECUPIN_USER,
   UPDATE_PASSWORD_USER,
@@ -26,6 +27,11 @@ export default function userReducer(state = initialeState, action) {
         ...state,
         // on change la valeur de isconnect
         isConnect: true,
+      };
+    case LOG_OUT:
+      return {
+        // on retourne le state initial
+        ...state,
       };
     // si profil user
     case GET_USER:
