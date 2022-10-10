@@ -37,11 +37,9 @@ const UpdateTicket = ({ _id }) => {
   const handleOnSubmit = (e) => {
     e.preventDefault();
 
-    message &&
-      expediteur &&
-      dispatch(responseTicket(_id, message, expediteur)) &&
-      dispatch(getSingleTicketInfo(selectedTicket._id)) &&
-      setMessage("");
+    message && expediteur && dispatch(responseTicket(_id, message, expediteur));
+    dispatch(getSingleTicketInfo(selectedTicket._id));
+    setMessage("");
   };
 
   return (
