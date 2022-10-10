@@ -39,9 +39,10 @@ const Login = () => {
   // cette fonction sera lancé après la soumission du formulaire
   useEffect(() => {
     // on vérifie si le user est connecté et que on nas un token
-    if (isConnect && localStorage.getItem("token")) {
+    if (localStorage.getItem("token") && isConnect) {
       // on recupere son profil et se redirige au tableau de bord
-      dispatch(getUserProfil()) && history.push("/dashboard");
+      dispatch(getUserProfil());
+      window.location = "/dashboard";
     }
   }, [isConnect, dispatch, history]);
 
