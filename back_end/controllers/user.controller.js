@@ -3,9 +3,8 @@ import bcrypt from "bcrypt";
 import { userModel } from "../models/user.modele.js";
 import { updatePinModel } from "../models/updatepin.modele.js";
 import { randomPinNumber } from "../utils/randomNumber.js";
-import { emailProcess } from "../utils/sendMail.js";
 import { hashPassword } from "../utils/hashCode.js";
-
+import { emailProcessMailgun } from "../utils/sendMail.js";
 // fonction pour la creation d'un user
 export async function CreateUserController(req, res) {
   // on recupere les saisie
@@ -209,7 +208,7 @@ export async function logoutUserController(req, res) {
   // on recupere l'id depuis notre entete pour le passer en parametre
   const _id = req.user.id;
 
-  // console.log(_id);
+  console.log(_id);
 
   // on modifie le contenu du token de utilisateur(_id) depuis la base de donnée
   // ce qui rend le token invalid et donc impossible de naviguer sur le site
@@ -288,9 +287,8 @@ export async function recupPinController(req, res) {
   if (loggedUser && loggedUser._id) {
     // on enregistre le code pin et le mail dans notre base de donnée
     const setPin = await newPin.save();
-
     // on envoie un mail de confirmation a notre user
-    emailProcess({
+    emailProcessMailgun({
       email,
       pin: setPin.codepin,
       type: "recup-code-pin",
@@ -307,7 +305,7 @@ export async function recupPinController(req, res) {
   }
   // message en cas d'erreur
   res.json({
-    statut: "error",
+    statut: "erreur",
     message: " Veuillez ressayer plustard",
   });
 }
@@ -400,7 +398,7 @@ export async function updatePasswordController(req, res) {
     //on envoi un mail de confirmation en cas de succès
     if (user._id) {
       // mail de notification
-      emailProcess({ email, type: "modification-mot-de-passe" });
+      emailProcessMailgun({ email, type: "modification-mot-de-passe" });
 
       // important  de mettre le return a l'interieur du if
       return res.json({
