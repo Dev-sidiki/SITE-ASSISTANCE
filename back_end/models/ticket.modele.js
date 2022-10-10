@@ -52,11 +52,11 @@ const TicketSchema = new mongoose.Schema(
           default: "",
         },
         // date de reponse du message
-        dateEnvoi: {
+        timestamp: {
           type: Date,
           required: true,
           // affiche la date a laquelle tu envoie le ticket ou la reponse
-          default: new Date().getTime(),
+          default: Date.now,
         },
       },
     ],
@@ -120,7 +120,7 @@ async function updateStatusClose({ _id }) {
     // on recherche le ticket associe a un user
     { _id },
     // on met à jour la valeur du statut
-    // { $set: { statut: newhashedPass } },
+    // { $set: { statut: "Clôturé" } },
     {
       statut: "Clôturé",
     },
