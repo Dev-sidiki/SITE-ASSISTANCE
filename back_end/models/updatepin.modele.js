@@ -39,7 +39,9 @@ updatePinSchema.static("deletePin", deletePin);
 // fonction qui recherche dans la base de donné
 // le codepin spécifique a un user via son email et le code généré
 async function getPinByEmailPin(email, pin) {
-  const codepin = await this.findOne({ email, pin });
+  const codepin = await this.findOne({ email, pin })
+    .sort({ createdAt: -1 })
+    .limit(1);
   if (!codepin) return false;
   return codepin;
 }
