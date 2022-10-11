@@ -141,7 +141,7 @@ export const responseTicket = (_id, message, expediteur) => {
       headers: {
         Authorization: sessionStorage.getItem("token"),
       },
-      // on lui passe les data pour repondre a n ticket
+      // on lui passe les data pour repondre a un ticket
       data: { message, expediteur },
     })
       .then((res) => {
