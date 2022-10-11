@@ -71,7 +71,8 @@ const Ticket = () => {
             variant="outline-info"
             onClick={() =>
               dispatch(updateTicketStatusClosed(tId)) &&
-              setCloseSucces("Le ticket à été cloturé")
+              setCloseSucces("Le ticket à été cloturé") &&
+              setDeleteSucces("")
             }
             disabled={selectedTicket.statut === "Clôturé"}
           >
@@ -83,7 +84,8 @@ const Ticket = () => {
               dispatch(deleteTicket(tId)) &&
               setDeleteSucces(
                 "Suppression effectuée, ce ticket n'existe plus dans la liste des tickets"
-              )
+              ) &&
+              setCloseSucces("")
             }
           >
             Supprimer Ticket
