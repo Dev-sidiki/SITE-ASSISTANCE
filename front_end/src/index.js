@@ -21,6 +21,7 @@ const store = createStore(
   // surtout ne pas oublier de les retirer avant la mise en prod
   composeWithDevTools(applyMiddleware(thunk))
 );
+
 // cette page permet d'afficher le contenu de notre application
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
