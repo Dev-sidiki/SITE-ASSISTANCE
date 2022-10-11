@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import MailIcon from "@material-ui/icons/Mail";
+import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import { useDispatch } from "react-redux";
 import { RECUPIN_USER } from "../../Actions/userAction";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
@@ -65,6 +66,7 @@ const RecupCodePin = () => {
           setShow(false);
         }
       })
+
       .catch((err) => console.log(err));
   };
 
@@ -102,6 +104,10 @@ const RecupCodePin = () => {
                 >
                   Envoyez
                 </Button>
+                <Link to="/" className="text-dark ">
+                  <NavigateBeforeIcon />
+                  retour
+                </Link>
               </Form>
               <hr />
             </Col>
