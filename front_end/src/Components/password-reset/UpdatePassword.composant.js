@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 // le composant qui affiche le formulaire de modification du mot de passe
 const UpdatePassword = () => {
   const [show, setShow] = useState(true);
+
   // on declare un objet vide contenant les champs
   // necessaire pour la modification du mot de passe
   const initialState = {
@@ -25,7 +26,7 @@ const UpdatePassword = () => {
 
   // variable contenant l'objet vide au depart
   const [newPasswordUser, setNewPasswordUser] = useState(initialState);
-
+  console.log(newPasswordUser);
   // variable qui
   const [modifSuccess, setModifSuccess] = useState("");
 
