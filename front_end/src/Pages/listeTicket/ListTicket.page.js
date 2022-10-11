@@ -23,7 +23,7 @@ const ListTicket = () => {
       <Row>
         {/* indication de la page courante */}
         <Col>
-          <CurrentPage page="Liste des ticket" />
+          <CurrentPage page="Liste des tickets" />
         </Col>
       </Row>
       <Row className="mt-4">
