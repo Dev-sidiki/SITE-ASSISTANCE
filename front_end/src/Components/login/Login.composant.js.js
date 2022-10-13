@@ -17,6 +17,7 @@ import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import { getUserProfil } from "../../Actions/userAction.js";
 import { Link } from "react-router-dom";
 import { LOGIN_USER } from "../../Actions/userAction.js";
+import { getAllTicketClients } from "../../Actions/ticketAction.js";
 
 // composant qui contient notre formulaire de connexion
 const Login = () => {
@@ -34,17 +35,27 @@ const Login = () => {
   // variable de navigation
   const history = useHistory();
 
-  const { isLoading, isConnect } = useSelector((state) => state.userReducer);
+  const { isLoading, isConnect, user } = useSelector(
+    (state) => state.userReducer
+  );
 
   // cette fonction sera lancé après la soumission du formulaire
   useEffect(() => {
     // on vérifie si le user est connecté et que on nas un token
-    if (localStorage.getItem("token") && isConnect) {
-      // on recupere son profil et se redirige au tableau de bord
+    if (localStorage.getItem("token") && isConnect && user.role === "client") {
+      // on recupere le profil client si user=client et se redirige au tableau de bord client
       dispatch(getUserProfil());
-      window.location = "/dashboard";
+      window.location = "/client-dashboard";
+    } else if (
+      localStorage.getItem("token") &&
+      isConnect &&
+      user.role === "admin"
+    ) {
+      // on recupere le profil client si user=admin et se redirige au tableau de bord admin
+      dispatch(getUserProfil());
+      window.location = "/admin-dashboard";
     }
-  }, [isConnect, dispatch, history]);
+  }, [isConnect, dispatch, user.role, history]);
 
   //fonction qui met a jour le champ de connexion
   const handleOnChange = (e) => {
@@ -121,7 +132,7 @@ const Login = () => {
     <Container>
       <Row>
         <Col>
-          <h1 className="text-dark text-center">Authentification Client</h1>
+          <h1 className="text-dark text-center">CONNEXION</h1>
           <hr />
           {/* on affiche les messages d'erreur si il en a */}
           {errorMail && <Alert variant="danger">{errorMail}</Alert>}

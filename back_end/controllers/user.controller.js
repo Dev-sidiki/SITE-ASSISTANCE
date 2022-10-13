@@ -243,6 +243,21 @@ export async function getUserInfoController(req, res) {
   res.send(userInfo);
 }
 
+// la fonction qui retourne la liste de tous les utilisateurs
+export async function getAllUserController(req, res) {
+  const users = await userModel.getAllUsers();
+  res.send(users);
+}
+
+// la fonction qui supprime les info sur un utilisateur depuis la base de donnée
+export async function deleteUserController(req, res) {
+  // on recupere l'id depuis notre entete pour le passer en parametre
+  const _id = req.user.id;
+
+  const deleteUser = await userModel.deleteUser(_id);
+  res.send(deleteUser);
+}
+
 // la fonction qui permet au user de recuperer son code pin
 // pour la modification de son mot de passe
 export async function recupPinController(req, res) {

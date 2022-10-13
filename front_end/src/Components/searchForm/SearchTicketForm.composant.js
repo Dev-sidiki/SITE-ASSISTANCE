@@ -2,6 +2,7 @@ import React from "react";
 import { Form, Row, Col } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { filterSerachTicket } from "../../Actions/ticketAction";
+import SearchIcon from "@material-ui/icons/Search";
 
 // le composant qui contient le formulaire de recherche
 const SearchTicketForm = () => {
@@ -21,9 +22,10 @@ const SearchTicketForm = () => {
         {/* champ de recherche */}
         <Form.Group as={Row}>
           <Form.Label column sm="3">
-            Recherche:
+            Recherche
+            <SearchIcon />
           </Form.Label>
-          <Col sm="9">
+          <Col sm="8">
             <Form.Control
               name="recherche"
               onChange={handleOnChange}

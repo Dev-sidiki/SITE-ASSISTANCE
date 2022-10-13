@@ -1,6 +1,7 @@
 import {
   LOGIN_USER,
   GET_USER,
+  GET_ALL_USERS,
   LOG_OUT,
   INSCRIPTION_USER,
   RECUPIN_USER,
@@ -11,6 +12,7 @@ import {
 // et stocker le contenu du post
 const initialeState = {
   user: [],
+  listeClients: [],
   isLoading: false,
   isConnect: false,
 };
@@ -40,6 +42,16 @@ export default function userReducer(state = initialeState, action) {
         ...state,
         // on stocke le resultat de notre requete dans la variable user
         user: action.payload,
+        // on change la valeur de isconnect
+        isConnect: true,
+      };
+    // si profil user
+    case GET_ALL_USERS:
+      // on retourne le state initial
+      return {
+        ...state,
+        // on stocke le resultat de notre requete dans la variable user
+        listeClients: action.payload,
         // on change la valeur de isconnect
         isConnect: true,
       };

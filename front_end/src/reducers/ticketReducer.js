@@ -1,8 +1,10 @@
 import {
   GET_ALL_TICKETS,
+  GET_TICKETS,
   GET_TICKET,
   SEARCH_TICKET,
   CLOSE_TICKET,
+  RESPONSE_TICKET_BY_ADMIN,
   ADD_TICKET,
   DELETE_TICKET,
   REPLY_TICKETS,
@@ -11,15 +13,27 @@ import {
 // qui va evoluer selon l'action
 // et stocker le contenu du resultat
 const initialeState = {
-  // tableau de tous les ticket
-  listeTickets: [],
+  // tableau de tous les ticket d'un client connecté
+  listeTicketsClient: [],
+
+  // tableau de tous les ticket pour tous les clients
+  listeAllTickets: [],
+
   //
   isLoading: false,
+
+  // le tableau contenant le ticket recherché par le client parmi ces tickets
+  //recherche via le formulaire de recherche
+  searchListeTicketsClients: [],
+
+  // le tableau contenant le ticketrecherché par l'admin parmi les tickets de tous les clients
+  //recherche via le formulaire de recherche
+  searchListeAllTickets: [],
+
   // tableau contenant un ticket selectionné
   selectedTicket: [],
-  // le tableau contenant la liste des ticket recherché
-  // via le formulaire de recherche
-  searchListeTickets: [],
+
+  result: "",
 };
 
 // la fonction qui va gerer notre initialeState
@@ -27,17 +41,26 @@ const initialeState = {
 // et nous le retourne
 export default function ticketReducer(state = initialeState, action) {
   switch (action.type) {
-    case GET_ALL_TICKETS:
-      // on retourne les tickets recuperer depuis la base de donne
+    case GET_TICKETS:
+      // contient la liste des tickets d'un client  (resultat recuperé depuis la base de donne)
       return {
         ...state,
         // on stocke le resultat de notre requete dans la variable
-        listeTickets: action.payload,
-        searchListeTickets: action.payload,
+        listeTicketsClient: action.payload,
+        searchListeTicketsClients: action.payload,
+      };
+
+    case GET_ALL_TICKETS:
+      // contient la liste des tickets d'un client  (resultat recuperé depuis la base de donne)
+      return {
+        ...state,
+        // on stocke le resultat de notre requete dans la variable
+        listeAllTickets: action.payload,
+        searchListeAllTickets: action.payload,
       };
 
     case GET_TICKET:
-      // on retourne le ticket recuperer depuis la base de donne
+      // contient un ticket selectionné (resultat recuperé depuis la base de donne)
       return {
         ...state,
         // on stocke le resultat de notre requete dans la variable
@@ -48,7 +71,7 @@ export default function ticketReducer(state = initialeState, action) {
       return {
         ...state,
         // on stocke le resultat le la liste filtrés dans la variable
-        searchListeTickets: state.listeTickets.filter((row) => {
+        searchListeTicketsClients: state.listeTicketsClient.filter((row) => {
           if (!action.payload) return row;
 
           return row.sujet.toLowerCase().includes(action.payload.toLowerCase());
@@ -60,13 +83,20 @@ export default function ticketReducer(state = initialeState, action) {
       return {
         ...state,
       };
+
+    case RESPONSE_TICKET_BY_ADMIN:
+      // on retourne la data recuperer depuis la base de donne
+      return {
+        ...state,
+        result: action.payload,
+      };
     case DELETE_TICKET:
       // on parcourt notre objet post pour retourner tous les post sauf
       // l'id du post passé en paramètre
       return {
         ...state,
         // on stocke le resultat le la liste filtrés dans la variable
-        searchListeTickets: state.listeTickets.filter((row) => {
+        searchListeTicketsClients: state.listeTicketsClient.filter((row) => {
           return row._id !== action.payload._id;
         }),
       };
@@ -77,7 +107,7 @@ export default function ticketReducer(state = initialeState, action) {
         ...state,
         // on stocke le resultat du message de notre requete dans la variable
         // on stocke le resultat le la liste filtrés dans la variable
-        // searchListeTickets: [...state.searchListeTickets, action.payload],
+        // searchListeTicketsClients: [...state.searchListeTicketsClients, action.payload],
       };
 
     case REPLY_TICKETS:
@@ -86,7 +116,7 @@ export default function ticketReducer(state = initialeState, action) {
         ...state,
         // on stocke le resultat du message de notre requete dans la variable
         // on stocke le resultat le la liste filtrés dans la variable
-        // searchListeTickets: [...state.searchListeTickets, action.payload],
+        // searchListeTicketsClients: [...state.searchListeTicketsClients, action.payload],
       };
     default:
       return state;

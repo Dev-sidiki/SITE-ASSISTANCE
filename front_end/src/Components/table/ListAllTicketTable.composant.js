@@ -6,12 +6,12 @@ import VisibilityIcon from "@material-ui/icons/Visibility";
 import { timestampParser } from "../../utils/dateParser";
 
 // le composant qui affiche la table des tickets
-const TicketTable = () => {
+const ListAllTicketTable = () => {
   //   on recupere les données du ticket du user connecté
-  const { searchListeTickets, isLoading } = useSelector(
+  const { searchListeAllTickets, isLoading } = useSelector(
     (state) => state.ticketReducer
   );
-  // console.log(searchListeTickets);
+  // console.log(searchListeTicketsClients);
 
   // en cas de chargment des données
   if (isLoading) return <h3>Loading ...</h3>;
@@ -41,8 +41,8 @@ const TicketTable = () => {
       </thead>
       {/* le contenu des tables(les differents tickets) */}
       <tbody>
-        {searchListeTickets && searchListeTickets.length > 0 ? (
-          searchListeTickets.map((row) => (
+        {searchListeAllTickets && searchListeAllTickets.length > 0 ? (
+          searchListeAllTickets.map((row) => (
             <tr key={row._id}>
               {/* <td>{row._id}</td> */}
               <td>{row.sujet}</td>
@@ -69,4 +69,4 @@ const TicketTable = () => {
   );
 };
 
-export default TicketTable;
+export default ListAllTicketTable;

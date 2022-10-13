@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import PhoneIcon from "@material-ui/icons/Phone";
 import MailIcon from "@material-ui/icons/Mail";
@@ -146,7 +147,7 @@ const Inscription = () => {
         <Container>
           <Row>
             <Col>
-              <h1 className="text-dark">Page d'inscription</h1>
+              <h1 className="text-dark text-center">INSCRIPTION</h1>
             </Col>
           </Row>
           <hr />
@@ -286,6 +287,10 @@ const Inscription = () => {
               </Form>
             </Col>
           </Row>
+          <Link to="/" className="text-dark">
+            <NavigateBeforeIcon />
+            retour
+          </Link>
         </Container>
       ) : (
         <div>

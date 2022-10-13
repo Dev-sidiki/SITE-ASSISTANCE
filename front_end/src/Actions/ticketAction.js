@@ -7,12 +7,14 @@ export const ADD_TICKET = "ADD_TICKET";
 export const GET_TICKET = "GET_TICKET";
 export const SEARCH_TICKET = "SEARCH_TICKET";
 export const GET_ALL_TICKETS = "GET_ALL_TICKETS";
+export const GET_TICKETS = "GET_TICKETS";
 export const REPLY_TICKETS = "REPLY_TICKETS";
 export const CLOSE_TICKET = "CLOSE_TICKET";
+export const RESPONSE_TICKET_BY_ADMIN = "RESPONSE_TICKET_BY_ADMIN";
 export const DELETE_TICKET = "DELETE_TICKET";
 
 //fonction pour recuperer  les tickets depuis la base de donnée
-export const getAllTickets = () => {
+export const getTicketClients = () => {
   return (dispatch) => {
     return (
       axios
@@ -30,6 +32,35 @@ export const getAllTickets = () => {
           if (res.data.tickets) {
             // console.log(res.data.tickets[0].sujet);
 
+            // on stocke le resultat dans le store dans la variable GET_TICKETS du reducer
+            // grace au payload afin de les traités dans le reducer
+            // selon nos besoin
+            dispatch({ type: GET_TICKETS, payload: res.data.tickets });
+          }
+        })
+        .catch((err) => console.log(err)) //on affiche l'erreur au cas ou
+    );
+  };
+};
+
+//fonction pour recuperer  les tickets depuis la base de donnée
+export const getAllTicketClients = () => {
+  return (dispatch) => {
+    return (
+      axios
+        // on fait une requete a la base de donée
+        .get(`${process.env.REACT_APP_API_URL}api/ticket/all-tickets`, {
+          //le token d'autorisation
+          headers: {
+            Authorization: sessionStorage.getItem("token"),
+          },
+        })
+        // le resultat a afficher si la requete se passe bien
+        .then((res) => {
+          // console.log(res.data.tickets);
+
+          if (res.data.tickets) {
+            console.log(res.data.tickets);
             // on stocke le resultat dans le store dans la variable GET_ALL_TICKETS du reducer
             // grace au payload afin de les traités dans le reducer
             // selon nos besoin
@@ -56,7 +87,37 @@ export const getSingleTicketInfo = (_id) => {
         })
         // la reponse au cas ou la requete se passe bien
         .then((res) => {
-          // console.log(res.data);
+          console.log(res.data);
+
+          if (res.data.tickets) {
+            // console.log(res.data.tickets[0].sujet);
+
+            //   on stocke le resultat dans le store dans la variable GET_TICKET du reducer
+            // grace au payload afin de les traités dans le reducer
+            // selon nos besoin
+            dispatch({ type: GET_TICKET, payload: res.data.tickets[0] });
+          }
+        })
+        .catch((err) => console.log(err)) //on affiche l'erreur au cas ou
+    );
+  };
+};
+//fonction pour recuperer les info sur un ticket
+export const getSingleTicketInfoByAdmin = (_id) => {
+  return (dispatch) => {
+    return (
+      // on fait une requete a la base de donée
+      axios
+        // on passe en parametre le _id comme dans le back
+        .post(`${process.env.REACT_APP_API_URL}api/ticket/${_id}`, {
+          headers: {
+            // token
+            Authorization: sessionStorage.getItem("token"),
+          },
+        })
+        // la reponse au cas ou la requete se passe bien
+        .then((res) => {
+          console.log(res.data);
 
           if (res.data.tickets) {
             // console.log(res.data.tickets[0].sujet);
@@ -109,6 +170,30 @@ export const updateTicketStatusClosed = (_id) => {
   };
 };
 
+export const updateStatusResponse = (_id) => {
+  return (dispatch) => {
+    // on fait la requête a la base de donnée
+    return axios({
+      method: "patch",
+      // on passe en parametre le _id comme dans le back
+      url: `${process.env.REACT_APP_API_URL}api/ticket/admin-response/${_id}`,
+      // le token
+      headers: {
+        Authorization: sessionStorage.getItem("token"),
+      },
+    })
+      .then((res) => {
+        console.log(res);
+
+        // on stocke le resultat dans le store dans la variable CLOSE_TICKET du reducer
+        // grace au payload afin de les traités dans le reducer
+        // selon nos besoin
+        dispatch({ type: RESPONSE_TICKET_BY_ADMIN, payload: res.data });
+      })
+      .catch((err) => console.log(err));
+  };
+};
+
 //fonction qui permet de supprimer un ticket
 export const deleteTicket = (_id) => {
   return (dispatch) => {
@@ -132,7 +217,7 @@ export const deleteTicket = (_id) => {
 };
 
 // fonction qui permet de repondre a un ticket
-export const responseTicket = (_id, message, expediteur) => {
+export const ResponseTicket = (_id, message, expediteur) => {
   return (dispatch) => {
     // on fait la requete a la base de donée
     return axios({
@@ -145,7 +230,7 @@ export const responseTicket = (_id, message, expediteur) => {
       data: { message, expediteur },
     })
       .then((res) => {
-        // console.log(res.data);
+        console.log(res.data);
 
         // on dispact le type REPLY_TICKETS pour recuperer les info du payload
         // et le stocker dans le reducer

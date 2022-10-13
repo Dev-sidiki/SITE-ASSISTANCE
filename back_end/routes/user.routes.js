@@ -5,6 +5,8 @@ import {
   loginUserController,
   logoutUserController,
   getUserInfoController,
+  getAllUserController,
+  deleteUserController,
   recupPinController,
   updatePasswordController,
 } from "../controllers/user.controller.js";
@@ -30,8 +32,16 @@ router.delete("/logout", authMiddleware, logoutUserController);
 
 //route  d'affichage des info d'un user connecté
 router.get("/", authMiddleware, getUserInfoController);
+
+//route  d'affichage des info de tous les users inscrit
+router.post("/all-users", getAllUserController);
+
+// suppression des elements
+router.delete("/delete-user", authMiddleware, deleteUserController);
+
 //route de creation du codepin d'un user
 router.post("/reset-password", recupPinController);
+
 //route de modification du password
 router.patch("/reset-password", updatePasswordController);
 

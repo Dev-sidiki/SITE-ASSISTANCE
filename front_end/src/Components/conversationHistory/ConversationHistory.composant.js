@@ -1,17 +1,14 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { timestampParser } from "../../utils/dateParser";
 
 // le composant qui traite l'historique des conversations
 // il prend en parametre le tableau de conversation
 const ConversationHistory = ({ message }) => {
-  const { selectedTicket } = useSelector((state) => state.ticketReducer);
-  console.log(selectedTicket);
   // on retourne rien si ya pas de conversation
   if (!message) return null;
 
-  //sinon on retourne les conversation(expediteur, date et message)
+  //sinon on retourne les conversation(client, date et message)
   return message.map((row, i) => (
     <div key={i} className="message-history mt-3">
       <div className="send font-weight-bold text-secondary">
@@ -19,7 +16,6 @@ const ConversationHistory = ({ message }) => {
         <div className="sender text-dark">
           {timestampParser(row.timestamp)}{" "}
         </div>
-        {/* {selectedTicket.updatedAt && timestampParser(selectedTicket.updatedAt)} */}
       </div>
       <div className="message">{row.message}</div>
     </div>

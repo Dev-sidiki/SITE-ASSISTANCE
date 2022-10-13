@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 const TicketSchema = new mongoose.Schema(
   {
     // client associé a ce ticket
-    clientId: {
+    userId: {
       // string
       type: mongoose.Schema.Types.ObjectId,
       // obligatoire
@@ -69,8 +69,11 @@ const TicketSchema = new mongoose.Schema(
 
 // creation de fontions statique pour les donnée (CRUD users)
 TicketSchema.static("getTickets", getTickets);
+TicketSchema.static("getAllTickets", getAllTickets);
 TicketSchema.static("getTicketById", getTicketById);
+TicketSchema.static("getTicketByAdmin", getTicketByAdmin);
 TicketSchema.static("updateSenderReply", updateSenderReply);
+TicketSchema.static("updateStatusResponseClient", updateStatusResponseClient);
 TicketSchema.static("updateStatusClose", updateStatusClose);
 TicketSchema.static("deleteTicket", deleteTicket);
 
@@ -80,21 +83,37 @@ TicketSchema.static("deleteTicket", deleteTicket);
 
 // fonction qui recherche dans la base de donné
 // les ticket spécifique a un user via son id du client
-async function getTickets(clientId) {
-  const ticket = await this.find({ clientId });
+async function getTickets(userId) {
+  const ticket = await this.find({ userId }).sort({ createdAt: -1 });
+  if (!ticket) return false;
+  return ticket;
+}
+
+// la fonction qui cherche la liste de tous les utilisateurs pour nous les afficher
+// depuis la base de donnée vers le front
+async function getAllTickets() {
+  // n'affiche pas le password en front
+  const AllUsers = await this.find().sort({ createdAt: -1 }).select();
+  return AllUsers;
+}
+
+// fonction qui recherche dans la base de donné
+// un ticket unique associé a un user via  idClient et l'id du ticket
+async function getTicketById(_id, userId) {
+  const ticket = await this.find({ _id, userId });
   if (!ticket) return false;
   return ticket;
 }
 
 // fonction qui recherche dans la base de donné
 // un ticket unique associé a un user via  idClient et l'id du ticket
-async function getTicketById(_id, clientId) {
-  const ticket = await this.find({ _id, clientId });
+async function getTicketByAdmin(_id) {
+  const ticket = await this.find({ _id }).select();
   if (!ticket) return false;
   return ticket;
 }
 
-// on ajoute la reponse pour un utilisateur
+// on ajoute la reponse à un ticket pour un client
 async function updateSenderReply({ _id, message, expediteur }) {
   const newReponse = await this.findOneAndUpdate(
     // recherche via id ticket
@@ -114,6 +133,21 @@ async function updateSenderReply({ _id, message, expediteur }) {
 
 //on rend le ticket invalide
 // client satisfait
+async function updateStatusResponseClient({ _id }) {
+  const closedStatut = await this.findOneAndUpdate(
+    // recherche via id ticket  et id utilisateur
+    // on recherche le ticket associe a un user
+    { _id },
+    // on met à jour la valeur du statut
+    {
+      statut: "En entente d'une reponse du client",
+    },
+    // option supplementaire pour valider le changement de notre bd
+    { new: true, upsert: true, setDefaultsOnInsert: true }
+  );
+  return closedStatut;
+}
+
 async function updateStatusClose({ _id }) {
   const closedStatut = await this.findOneAndUpdate(
     // recherche via id ticket  et id utilisateur
@@ -132,8 +166,8 @@ async function updateStatusClose({ _id }) {
 
 // la fonction qui cherche et supprime un ticket utilisateur
 // depuis la base de donnée
-async function deleteTicket(_id, clientId) {
-  const deleteTicket = await this.findOneAndDelete({ _id, clientId }).exec();
+async function deleteTicket(_id, userId) {
+  const deleteTicket = await this.findOneAndDelete({ _id, userId }).exec();
   return deleteTicket;
 }
 

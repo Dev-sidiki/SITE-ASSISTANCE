@@ -1,5 +1,4 @@
 import React from "react";
-
 import InscriptionForm from "../../Components/Inscription/Inscription.composant.js";
 import "../../Styles/inscription/inscription.css";
 import logoDsi from "../../Assets/image/logoDsi.png";

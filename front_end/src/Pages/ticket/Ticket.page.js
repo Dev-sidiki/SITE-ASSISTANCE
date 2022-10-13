@@ -6,7 +6,8 @@ import CurrentPage from "../../Components/currentPage/CurrentPage.composant.js";
 import ConversationHistory from "../../Components/conversationHistory/ConversationHistory.composant.js";
 import UpdateTicket from "../../Components/updateTicket/UpdateTicket.composant.js";
 import {
-  getSingleTicketInfo,
+  // getSingleTicketInfo,
+  getSingleTicketInfoByAdmin,
   updateTicketStatusClosed,
   deleteTicket,
 } from "../../Actions/ticketAction.js";
@@ -27,10 +28,8 @@ const Ticket = () => {
     (state) => state.ticketReducer
   );
 
-  console.log(selectedTicket);
-
   useEffect(() => {
-    dispatch(getSingleTicketInfo(tId));
+    dispatch(getSingleTicketInfoByAdmin(tId));
   }, [dispatch, tId]);
 
   return (

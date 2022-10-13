@@ -45,7 +45,7 @@ export async function createTicketController(req, res) {
   const newTicket = new ticketModel({
     // les data à envoyer pour creer un ticket
     // id du client généré selon le user connecté
-    clientId: decodedId,
+    userId: decodedId,
     sujet: sujet,
     conversations: [
       {
@@ -78,6 +78,32 @@ export async function getTicketUserController(req, res) {
     const userId = req.user.id;
     // on recherche le ticket depuis la base de donnée
     const tickets = await ticketModel.getTickets(userId);
+
+    // si le user ne dispose pas encore de ticket
+    if (tickets.length == 0) {
+      // la reponse du serveur
+      return res.status(200).json({
+        statut: "vide",
+        message: "Vous n'avez aucun ticket en ce moment",
+      });
+    }
+    //sinon si il y'a des ticket, on retourne la liste des ticket
+    return res.status(200).json({
+      statut: "réussi",
+      message: "Vous verrez ci-dessous la liste de vos tickets",
+      tickets,
+    });
+  } catch (err) {
+    // sinon on retourne le message d'erreur
+    return res.send(err.message);
+  }
+}
+
+// la fonction qui retourne la liste de tous les utilisateurs
+export async function getAllTicketsController(req, res) {
+  try {
+    // on recherche le ticket depuis la base de donnée
+    const tickets = await ticketModel.getAllTickets();
 
     // si le user ne dispose pas encore de ticket
     if (tickets.length == 0) {
@@ -132,6 +158,32 @@ export async function getTicketUserByIdParamController(req, res) {
   }
 }
 
+//fonction d'affichage d'un ticket unique associés à un user
+export async function getTicketUserByAdminController(req, res) {
+  try {
+    // on recupere l'id du ticket à afficher
+    const { _id } = req.params;
+
+    // on vérifie si le paramètre qui est passé existe dans la base de donnée
+    if (!mongoose.Types.ObjectId.isValid(_id)) {
+      return res.send("ID inconnu :" + _id);
+    }
+
+    // on recherche le ticket depuis la base de donnée
+    const tickets = await ticketModel.getTicketByAdmin(_id);
+
+    // réponse si le ticket a été trouvé
+    return res.status(200).json({
+      statut: "réussi",
+      message: "Vous verrez ci-dessous les details sur le ticket",
+      tickets,
+    });
+  } catch (err) {
+    // sinon on retourne le message d'erreur
+    return res.send(err.message);
+  }
+}
+
 // fonction de mise a jour des conversation client-operateur
 export async function updateSenderReplyController(req, res) {
   try {
@@ -139,7 +191,7 @@ export async function updateSenderReplyController(req, res) {
     const { expediteur, message } = req.body;
 
     // on recupere l'id du user connecté depuis notre entete
-    const clienId = req.user.id;
+    const userId = req.user.id;
 
     // on recupere l'id du ticket
     const { _id } = req.params;
@@ -150,7 +202,7 @@ export async function updateSenderReplyController(req, res) {
     }
 
     // on verifie si le parametre est exactement l'id du ticket
-    if (_id === clienId) {
+    if (_id === userId) {
       return res.send("parametre ticket incorrect:" + _id);
     }
     // variable de gestion des erreurs
@@ -204,13 +256,13 @@ export async function updateSenderReplyController(req, res) {
 
 // fonction de mise a jour du statut du ticket
 // on cloture le ticket si solution trouvée
-export async function updateStatusCloseController(req, res) {
+export async function updateStatusResponseClientController(req, res) {
   try {
     // on recupere l'id du ticket
     const { _id } = req.params;
 
-    // on recupère l'id client
-    const clienId = req.user.id;
+    // on recupère l'id du user connecté
+    const userId = req.user.id;
 
     // on vérifie si le paramètre qui est passé existe dans la base de donnée
     if (!mongoose.Types.ObjectId.isValid(_id)) {
@@ -218,7 +270,49 @@ export async function updateStatusCloseController(req, res) {
     }
 
     // on verifie si le parametre est exactement l'id du ticket
-    if (_id === clienId) {
+    if (_id === userId) {
+      return res.send("parametre ticket incorrect:" + _id);
+    }
+
+    // si l'id est correcte,
+    // on cloture le ticket depuis la base de donnée
+    const reponse = await ticketModel.updateStatusResponseClient({ _id });
+
+    // reponse si tout se passe bien
+    if (reponse._id) {
+      return res.status(200).json({
+        statut: "répondu",
+        message: "Vous avez réçu une reponse",
+      });
+    }
+    // reponse en cas de soucis
+    res.json({
+      status: "erreur",
+      message: "le ticket n'a pas encore été répondu",
+    });
+  } catch (err) {
+    // sinon on retourne le message d'erreur
+    return res.send(err.message);
+  }
+}
+
+// fonction de mise a jour du statut du ticket
+// on cloture le ticket si solution trouvée
+export async function updateStatusCloseController(req, res) {
+  try {
+    // on recupere l'id du ticket
+    const { _id } = req.params;
+
+    // on recupère l'id du user connecté
+    const userId = req.user.id;
+
+    // on vérifie si le paramètre qui est passé existe dans la base de donnée
+    if (!mongoose.Types.ObjectId.isValid(_id)) {
+      return res.send("ID inconnu :" + _id);
+    }
+
+    // on verifie si le parametre est exactement l'id du ticket
+    if (_id === userId) {
       return res.send("parametre ticket incorrect:" + _id);
     }
 

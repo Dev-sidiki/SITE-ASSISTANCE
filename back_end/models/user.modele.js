@@ -47,6 +47,15 @@ const userSchema = new mongoose.Schema(
       // obligatoire
       required: true,
     },
+    statut: {
+      // chaine de caractere
+      type: String,
+      // taille max
+      maxlength: 50,
+      // obligatoire
+      required: true,
+      default: "actif",
+    },
     addresse: {
       // chaine de caractere
       type: String,
@@ -78,6 +87,11 @@ const userSchema = new mongoose.Schema(
         default: Date.now(),
       },
     },
+    role: {
+      type: String,
+      // client par defaut
+      default: "client",
+    },
     // verifie si un user est inscrit
     estMembre: {
       // soit vrai ou soit faux
@@ -98,6 +112,7 @@ const userSchema = new mongoose.Schema(
 userSchema.static("createUser", createUser);
 userSchema.static("getUserByEmail", getUserByEmail);
 userSchema.static("getUserById", getUserById);
+userSchema.static("getAllUsers", getAllUsers);
 userSchema.static("refreshToken", refreshToken);
 userSchema.static("updatePassword", updatePassword);
 userSchema.static("verifyUser", verifyUser);
@@ -145,6 +160,14 @@ async function getUserById(_id) {
   const user = await this.find({ _id }).select("-password");
   if (!user) return false;
   return user;
+}
+
+// la fonction qui cherche la liste de tous les utilisateurs pour nous les afficher
+// depuis la base de donnée vers le front
+async function getAllUsers() {
+  // n'affiche pas le password en front
+  const AllUsers = await this.find().select("-password");
+  return AllUsers;
 }
 
 // fonction appelé par le controller pour actualiser le token pour un utilisateur

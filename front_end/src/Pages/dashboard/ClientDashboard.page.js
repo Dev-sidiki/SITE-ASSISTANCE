@@ -1,34 +1,36 @@
 import React, { useEffect } from "react";
-import TicketTable from "../../Components/tableTicket/TicketTable.composant.js";
+import TicketTable from "../../Components/table/TicketTable.composant.js";
 import CurrentPage from "../../Components/currentPage/CurrentPage.composant.js";
 import { Link } from "react-router-dom";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import AddIcon from "@material-ui/icons/Add";
-import { getAllTickets } from "../../Actions/ticketAction.js";
+import { getTicketClients } from "../../Actions/ticketAction.js";
 import { Spinner } from "react-bootstrap";
-import { LinearProgress, makeStyles, createStyles } from "@material-ui/core";
+import { LinearProgress } from "@material-ui/core";
 
 // le composant qui affiche le tableau de bord du user connecté
-const Dashboard = () => {
+const ClientDashboard = () => {
   const dispatch = useDispatch();
   const { user, isConnect } = useSelector((state) => state.userReducer);
   const { isLoading } = useSelector((state) => state.ticketReducer);
-  const { searchListeTickets } = useSelector((state) => state.ticketReducer);
-  // console.log(listeTickets);
-  // console.log(user._id);
+  const { searchListeTicketsClients } = useSelector(
+    (state) => state.ticketReducer
+  );
+  // console.log(listeTicketsClient);
+  console.log(user._id);
   useEffect(() => {
-    if (!searchListeTickets.length) {
-      dispatch(getAllTickets());
+    if (!searchListeTicketsClients.length) {
+      dispatch(getTicketClients());
     }
-  }, [searchListeTickets, isLoading, dispatch]);
+  }, [searchListeTicketsClients, user, isLoading, dispatch]);
 
   // ticket en entente de traitement
-  const pendingTickets = searchListeTickets.filter(
+  const pendingTickets = searchListeTicketsClients.filter(
     (row) => row.statut !== "Clôturé"
   );
   // nombre total de ticket
-  const totaltTickets = searchListeTickets;
+  const totaltTickets = searchListeTicketsClients;
 
   return (
     <div>
@@ -88,4 +90,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default ClientDashboard;

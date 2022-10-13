@@ -7,6 +7,7 @@ export const INSCRIPTION_USER = "INSCRIPTION_USER";
 export const LOGIN_USER = "LOGIN_USER";
 export const LOG_OUT = "LOG_OUT";
 export const GET_USER = "GET_USER";
+export const GET_ALL_USERS = "GET_ALL_USERS";
 export const RECUPIN_USER = "RECUPIN_USER";
 export const UPDATE_PASSWORD_USER = "UPDATE_PASSWORD_USER";
 export const DELETE_USER = "DELETE_USER";
@@ -37,6 +38,37 @@ export const getUserProfil = () => {
         // grace au payload afin de les traités dans le reducer
         // selon nos besoin
         dispatch({ type: GET_USER, payload: res.data[0] });
+      })
+      .catch((err) => console.log(err));
+  };
+};
+
+// fonction qui affiche le profil d'un user
+export const getAllUsers = () => {
+  return (dispatch) => {
+    // on recupere le token depuis notre base de donnée local
+    // const accessToken = localStorage.getItem("token");
+
+    // // message affiche si pas de token
+    // if (!accessToken) {
+    //   console.log("Token not found!");
+    // }
+    // si token, on fait la requête a la base de donnée
+    return axios({
+      method: "post",
+      url: `${process.env.REACT_APP_API_URL}api/user/all-users`,
+      withCredentials: true,
+      // headers: {
+      //   Authorization: accessToken,
+      // },
+    })
+      .then((res) => {
+        console.log(res.data);
+
+        // on stocke le resultat dans le store dans la variable GET_USER du reducer
+        // grace au payload afin de les traités dans le reducer
+        // selon nos besoin
+        dispatch({ type: GET_ALL_USERS, payload: res.data });
       })
       .catch((err) => console.log(err));
   };

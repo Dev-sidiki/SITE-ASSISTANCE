@@ -3,15 +3,17 @@ import PropTypes from "prop-types";
 import { Form, Button } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  getSingleTicketInfo,
-  responseTicket,
+  // getSingleTicketInfo,
+  getSingleTicketInfoByAdmin,
+  ResponseTicket,
+  updateStatusResponse,
 } from "../../Actions/ticketAction.js";
 
 // ce composant retourne le formulaire pour reponse a un ticket
 const UpdateTicket = ({ _id }) => {
   //on recupere les info sur le user connecté
   const { user } = useSelector((state) => state.userReducer);
-  // console.log(user.nom);
+  console.log(user.role);
 
   // on recupere les données du ticket du user connecté
   const { selectedTicket } = useSelector((state) => state.ticketReducer);
@@ -36,10 +38,22 @@ const UpdateTicket = ({ _id }) => {
   // la fonction qui sera exécuté lorsque le formulaire sera soumis
   const handleOnSubmit = (e) => {
     e.preventDefault();
+    if (user.role === "client") {
+      message &&
+        expediteur &&
+        dispatch(ResponseTicket(_id, message, expediteur));
+      dispatch(getSingleTicketInfoByAdmin(selectedTicket._id));
+      setMessage("");
+    }
 
-    message && expediteur && dispatch(responseTicket(_id, message, expediteur));
-    dispatch(getSingleTicketInfo(selectedTicket._id));
-    setMessage("");
+    if (user.role === "admin") {
+      message &&
+        expediteur &&
+        dispatch(ResponseTicket(_id, message, expediteur));
+      dispatch(getSingleTicketInfoByAdmin(selectedTicket._id));
+      dispatch(updateStatusResponse(selectedTicket._id));
+      setMessage("");
+    }
   };
 
   return (
@@ -62,9 +76,15 @@ const UpdateTicket = ({ _id }) => {
         />
         {/* bouton de soumission de la reponse */}
         <div className="text-right mt-3 mb-3">
-          <Button variant="info" type="submit">
-            Repondre
-          </Button>
+          {user.role === "client" ? (
+            <Button variant="info" type="submit">
+              soumettre
+            </Button>
+          ) : (
+            <Button variant="info" type="submit">
+              Repondre
+            </Button>
+          )}
         </div>
       </Form>
     </div>

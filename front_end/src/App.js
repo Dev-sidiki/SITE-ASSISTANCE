@@ -1,16 +1,19 @@
 import React, { useEffect } from "react";
-
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import ClientDefaultLayout from "./layout/ClientDefaultLayout.js";
+import AdminDefaultLayout from "./layout/AdminDefaultLayout.js";
 import Home from "./Pages/home/Home.page.js";
 import InscriptionPage from "./Pages/inscription/Inscription.page.js";
 import UpdatePasswordPage from "./Pages/password-rest/UpdatePassword.page";
-import Dashboard from "./Pages/dashboard/Dashboard.page";
+import ClientDashboard from "./Pages/dashboard/ClientDashboard.page";
+import AdminDashboard from "./Pages/dashboard/AdminDashboard.page.js";
 import AddTicket from "./Pages/addTicket/AddTicket.page";
 import Ticket from "./Pages/ticket/Ticket.page";
-import ListTicket from "./Pages/listeTicket/ListTicket.page";
-import DefaultLayout from "./layout/DefaultLayout.js";
+import ListClients from "./Pages/liste/ListClients.page.js";
+import ListTicketClient from "./Pages/liste/ListTicketClient.page";
+import ListAllTickets from "./Pages/liste/ListAllTickets.page.js";
 import Chargement from "./Pages/logout/Chargement.js";
 import RecupPinPage from "./Pages/password-rest/RecupPinPage";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getUserProfil, getNewAccesUserProfil } from "./Actions/userAction.js";
 
@@ -36,45 +39,68 @@ function App() {
     <div className="App">
       <Router>
         <Switch>
-          {/* route pour acceder à la page d'accueil */}
+          {/* route pour accéder à la page d'accueil du site*/}
           <Route exact path="/">
             <Home />
           </Route>
-          {/* route pour acceder à la page d'inscription */}
+          {/* route pour accéder à la page d'inscription du site */}
           <Route exact path="/inscription">
             <InscriptionPage />
           </Route>
-          {/* route pour acceder à la page de recuperation de codepin */}
+          {/* route pour accéder à la page de récuperation de codepin */}
           <Route exact path="/recup-pin">
             <RecupPinPage />
           </Route>
-          {/* route pour acceder à la page de modif de mot de passe */}
+          {/* route pour accéder à la page de modification de mot de passe */}
           <Route exact path="/modif-password">
             <UpdatePasswordPage />
           </Route>
+
+          {isConnect && user._id && user.role === "admin" && (
+            <AdminDefaultLayout>
+              {/* route pour accéder au tableau de bord de l'admin*/}
+              <Route exact path="/admin-dashboard">
+                <AdminDashboard />
+              </Route>
+              accéder{" "}
+              <Route exact path="/list-clients">
+                <ListClients />
+              </Route>
+              {/* route pour accéder à la liste de tous les tickets clients*/}
+              <Route exact path="/list-tickets">
+                <ListAllTickets />
+              </Route>
+              {/* route pour accéder à la page de visualisation d'un ticket*/}
+              <Route exact path="/ticket/:tId">
+                <Ticket />
+              </Route>
+            </AdminDefaultLayout>
+          )}
           {/* creation de la mise en page de nos composant route*/}
-          {user && user._id && isConnect && (
+          {user && user._id && isConnect && user.role === "client" && (
             <div>
-              <DefaultLayout>
-                {/* route pour acceder au tableau de bord*/}
-                <Route exact path="/dashboard">
-                  <Dashboard />
+              <ClientDefaultLayout>
+                {/* route pour acceder au tableau de bord du client*/}
+                <Route exact path="/client-dashboard">
+                  <ClientDashboard />
                 </Route>
-                {/* route pour acceder à la page d'ajout du ticket */}
+
+                {/* route pour acceder à la page d'ajout du ticket du client*/}
                 <Route exact path="/ajout-ticket">
                   <AddTicket />
                 </Route>
-                {/* route pour acceder à la page de visualisation d'un ticket*/}
+                {/* route pour acceder à la page de visualisation d'un ticket du client*/}
                 <Route exact path="/ticket/:tId">
                   <Ticket />
                 </Route>
-                {/* route pour acceder à la liste des ticket */}
-                <Route exact path="/list-tickets">
-                  <ListTicket />
+                {/* route pour acceder à la liste des ticket du client*/}
+                <Route exact path="/list-tickets-clients">
+                  <ListTicketClient />
                 </Route>
-              </DefaultLayout>
+              </ClientDefaultLayout>
             </div>
           )}
+          {/* route pour acceder à la page de chargement*/}
           <Route path="*">
             <Chargement />
           </Route>

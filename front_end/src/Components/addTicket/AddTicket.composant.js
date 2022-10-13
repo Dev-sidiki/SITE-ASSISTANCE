@@ -26,6 +26,7 @@ const AddTicket = () => {
   // on attribut de façon automatique le nom du user connecté
   // à la variable expediteur
   const expediteur = user.nom;
+  // console.log(expediteur);
 
   //on initialise un nouveau ticket vide
   const [newTicket, setNewTicket] = useState(initialTicket);
@@ -60,7 +61,7 @@ const AddTicket = () => {
       data: { sujet, expediteur, message },
     })
       .then((res) => {
-        // console.log(res.data);
+        console.log(res.data);
 
         //si le user a été inscrit
         if (res.data.statut === "ticket crée") {

@@ -5,7 +5,7 @@ import { userLogout } from "../../Actions/userAction";
 import { useDispatch } from "react-redux";
 
 // le composant qui contient l'entetede de notre page
-const Header = () => {
+const AdminHeader = () => {
   const dispatch = useDispatch();
 
   //fonction pour la deconnexion
@@ -30,12 +30,22 @@ const Header = () => {
         {/* lien vers le tablaeu de bord */}
         <li>
           <Link
-            to={"/dashboard"}
+            to={"/admin-dashboard"}
             className="text-dark p-4 font-monospace fs-5 "
           >
             Tableau de bord
           </Link>
         </li>
+        <li>
+          {/* lien vers la liste des tickets */}
+          <Link
+            to={"/list-clients"}
+            className="text-dark p-5 font-monospace fs-5"
+          >
+            Clients
+          </Link>
+        </li>
+
         <li>
           {/* lien vers la liste des tickets */}
           <Link
@@ -61,4 +71,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default AdminHeader;
