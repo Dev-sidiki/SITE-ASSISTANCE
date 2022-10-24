@@ -135,7 +135,7 @@ export const getSingleTicketInfoByAdmin = (_id) => {
 
 //fonction pour filtrer ma liste de ticket
 // il prend parametre la valeur du input
-export const filterSerachTicket = (search) => {
+export const filterSearchTicket = (search) => {
   return (dispatch) => {
     // on stocke le resultat dans le store dans la variable SEARCH_TICKET du reducer
     // grace au payload afin de les traités dans le reducer

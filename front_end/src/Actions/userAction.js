@@ -8,6 +8,7 @@ export const LOGIN_USER = "LOGIN_USER";
 export const LOG_OUT = "LOG_OUT";
 export const GET_USER = "GET_USER";
 export const GET_ALL_USERS = "GET_ALL_USERS";
+export const SEARCH_CLIENT = "SEARCH_CLIENT";
 export const RECUPIN_USER = "RECUPIN_USER";
 export const UPDATE_PASSWORD_USER = "UPDATE_PASSWORD_USER";
 export const DELETE_USER = "DELETE_USER";
@@ -124,7 +125,7 @@ export const userLogout = () => {
   return (dispatch) => {
     return axios({
       method: "delete",
-      url: `${process.env.REACT_APP_API_URL}api/user/logout/`,
+      url: `${process.env.REACT_APP_API_URL}api/user/logout`,
       withCredentials: true,
       headers: {
         Authorization: sessionStorage.getItem("token"),
@@ -137,6 +138,41 @@ export const userLogout = () => {
         // grace au payload afin de les traités dans le reducer
         // selon nos besoin
         dispatch({ type: LOG_OUT, payload: res.data });
+      })
+      .catch((err) => console.log(err));
+  };
+  // on fait la requête a la base de donnée
+};
+
+//fonction pour filtrer la liste des clients
+// il prend parametre la valeur du input
+export const filterSearchClient = (search) => {
+  return (dispatch) => {
+    // on stocke le resultat dans le store dans la variable SEARCH_CLIENT du reducer
+    // grace au payload afin de les traités dans le reducer
+    // selon nos besoin
+    return dispatch({ type: SEARCH_CLIENT, payload: search });
+  };
+};
+
+// fonction de déconnection d'un user
+export const deleteUser = () => {
+  return (dispatch) => {
+    return axios({
+      method: "delete",
+      url: `${process.env.REACT_APP_API_URL}api/user/delete-user`,
+      withCredentials: true,
+      headers: {
+        Authorization: sessionStorage.getItem("token"),
+      },
+    })
+      .then((res) => {
+        console.log(res.data);
+
+        // on stocke le resultat dans le store dans la variable GET_USER du reducer
+        // grace au payload afin de les traités dans le reducer
+        // selon nos besoin
+        dispatch({ type: DELETE_USER, payload: res.data });
       })
       .catch((err) => console.log(err));
   };
