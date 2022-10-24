@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Row, Col } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { filterSerachTicket } from "../../Actions/ticketAction";
+import { filterSearchClient } from "../../Actions/userAction";
 import SearchIcon from "@material-ui/icons/Search";
 // le composant qui contient le formulaire de recherche
 const SearchClientForm = () => {
@@ -12,7 +12,7 @@ const SearchClientForm = () => {
   // selon la valeur de l'input
   const handleOnChange = (e) => {
     const { value } = e.target;
-    dispatch(filterSerachTicket(value));
+    dispatch(filterSearchClient(value));
   };
 
   return (
