@@ -166,8 +166,8 @@ async function updateStatusClose({ _id }) {
 
 // la fonction qui cherche et supprime un ticket utilisateur
 // depuis la base de donnée
-async function deleteTicket(_id, userId) {
-  const deleteTicket = await this.findOneAndDelete({ _id, userId }).exec();
+async function deleteTicket(_id) {
+  const deleteTicket = await this.findOneAndDelete({ _id }).exec();
   return deleteTicket;
 }
 
