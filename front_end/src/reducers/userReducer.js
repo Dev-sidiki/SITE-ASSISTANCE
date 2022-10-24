@@ -5,6 +5,8 @@ import {
   LOG_OUT,
   INSCRIPTION_USER,
   RECUPIN_USER,
+  SEARCH_CLIENT,
+  DELETE_USER,
   UPDATE_PASSWORD_USER,
 } from "../Actions/userAction";
 
@@ -13,6 +15,7 @@ import {
 const initialeState = {
   user: [],
   listeClients: [],
+  SearchListeClient: [],
   isLoading: false,
   isConnect: false,
 };
@@ -52,8 +55,26 @@ export default function userReducer(state = initialeState, action) {
         ...state,
         // on stocke le resultat de notre requete dans la variable user
         listeClients: action.payload,
+        SearchListeClient: action.payload,
         // on change la valeur de isconnect
         isConnect: true,
+      };
+    // si profil user
+    case DELETE_USER:
+      // on retourne le state initial
+      return {
+        ...state,
+      };
+
+    case SEARCH_CLIENT:
+      return {
+        ...state,
+        // on stocke le resultat le la liste filtrés dans la variable
+        SearchListeClient: state.listeClients.filter((row) => {
+          if (!action.payload) return row;
+
+          return row.nom.toLowerCase().includes(action.payload.toLowerCase());
+        }),
       };
     // si inscription user
     case INSCRIPTION_USER:
