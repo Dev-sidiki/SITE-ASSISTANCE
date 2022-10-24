@@ -62,7 +62,7 @@ function App() {
               <Route exact path="/admin-dashboard">
                 <AdminDashboard />
               </Route>
-              accéder{" "}
+
               <Route exact path="/list-clients">
                 <ListClients />
               </Route>

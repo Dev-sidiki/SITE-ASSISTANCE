@@ -32,8 +32,6 @@ const initialeState = {
 
   // tableau contenant un ticket selectionné
   selectedTicket: [],
-
-  result: "",
 };
 
 // la fonction qui va gerer notre initialeState
@@ -72,6 +70,13 @@ export default function ticketReducer(state = initialeState, action) {
         ...state,
         // on stocke le resultat le la liste filtrés dans la variable
         searchListeTicketsClients: state.listeTicketsClient.filter((row) => {
+          if (!action.payload) return row;
+
+          return row.sujet.toLowerCase().includes(action.payload.toLowerCase());
+        }),
+
+        // on stocke le resultat le la liste filtrés dans la variable
+        searchListeAllTickets: state.listeAllTickets.filter((row) => {
           if (!action.payload) return row;
 
           return row.sujet.toLowerCase().includes(action.payload.toLowerCase());

@@ -13,7 +13,7 @@ const ListAllTicketTable = () => {
   );
   // console.log(searchListeTicketsClients);
 
-  // en cas de chargment des données
+  // en cas de chargement des données
   if (isLoading) return <h3>Loading ...</h3>;
 
   return (
@@ -21,8 +21,6 @@ const ListAllTicketTable = () => {
       {/* entete de la table */}
       <thead>
         <tr>
-          {/* <th>id</th> */}
-
           <th>
             {" "}
             <center>Sujet</center>
@@ -44,7 +42,6 @@ const ListAllTicketTable = () => {
         {searchListeAllTickets && searchListeAllTickets.length > 0 ? (
           searchListeAllTickets.map((row) => (
             <tr key={row._id}>
-              {/* <td>{row._id}</td> */}
               <td>{row.sujet}</td>
               <td>{row.statut}</td>
               <td>{row.createdAt && timestampParser(row.createdAt)}</td>

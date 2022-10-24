@@ -32,7 +32,7 @@ const AddTicket = () => {
   const [newTicket, setNewTicket] = useState(initialTicket);
 
   // variable qui affiche le message d'ajout d'un ticket
-  const [ajoutSuccess, setAjoutSuccess] = useState();
+  const [ajoutSuccess, setAjoutSuccess] = useState("");
 
   //la fonction qui change le contenu du formulaire
   // selon les saisi utilisateur

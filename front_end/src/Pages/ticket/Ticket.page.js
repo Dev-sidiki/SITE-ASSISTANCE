@@ -6,7 +6,6 @@ import CurrentPage from "../../Components/currentPage/CurrentPage.composant.js";
 import ConversationHistory from "../../Components/conversationHistory/ConversationHistory.composant.js";
 import UpdateTicket from "../../Components/updateTicket/UpdateTicket.composant.js";
 import {
-  // getSingleTicketInfo,
   getSingleTicketInfoByAdmin,
   updateTicketStatusClosed,
   deleteTicket,

@@ -4,26 +4,22 @@ import { Container, Row, Col } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllTicketClients } from "../../Actions/ticketAction.js";
 import { getAllUsers } from "../../Actions/userAction.js";
-import { Spinner } from "react-bootstrap";
-import { LinearProgress } from "@material-ui/core";
 
 // le composant qui affiche le tableau de bord du user connecté
 const AdminDashboard = () => {
   const dispatch = useDispatch();
-  const { listeClients, user, isConnect } = useSelector(
-    (state) => state.userReducer
-  );
+  const { listeClients, user } = useSelector((state) => state.userReducer);
   const { isLoading } = useSelector((state) => state.ticketReducer);
   const { searchListeAllTickets } = useSelector((state) => state.ticketReducer);
   // console.log(listeTicketsClient);
   // console.log(users);
   useEffect(() => {
-    if (!searchListeAllTickets.length && !listeClients.length) {
+    // on lance la fonctio qui affiche le nombre total de client et de ticket
+    // des que nous sommes sur la page
+    if (!searchListeAllTickets.length) {
       dispatch(getAllTicketClients());
       dispatch(getAllUsers());
     }
-
-    // dispatch(getAllUsers());
   }, [searchListeAllTickets, listeClients, isLoading, dispatch]);
 
   // ticket en entente de traitement
@@ -35,12 +31,6 @@ const AdminDashboard = () => {
 
   return (
     <div>
-      {/* {!isLoading && !isConnect ? (
-        <div>
-          <LinearProgress />
-          <Spinner variant="primary" animation="border" />
-        </div>
-      ) : ( */}
       <div>
         <Container>
           <div> Bienvenue {user.nom}</div>
@@ -65,7 +55,6 @@ const AdminDashboard = () => {
           </Row>
         </Container>
       </div>
-      {/* )} */}
     </div>
   );
 };
