@@ -11,13 +11,11 @@ import {
   Alert,
   Spinner,
 } from "react-bootstrap";
-
 import MailIcon from "@material-ui/icons/Mail";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import { getUserProfil } from "../../Actions/userAction.js";
 import { Link } from "react-router-dom";
 import { LOGIN_USER } from "../../Actions/userAction.js";
-import { getAllTicketClients } from "../../Actions/ticketAction.js";
 
 // composant qui contient notre formulaire de connexion
 const Login = () => {
