@@ -358,7 +358,7 @@ export async function deleteTicketController(req, res) {
     }
 
     // on supprime le ticket le ticket depuis la base de donnée
-    await ticketModel.deleteTicket(_id, clienId);
+    await ticketModel.deleteTicket(_id);
 
     // reponse si tout se passe bien
     return res.status(200).json({
