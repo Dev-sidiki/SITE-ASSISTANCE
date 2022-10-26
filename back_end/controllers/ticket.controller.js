@@ -99,6 +99,72 @@ export async function getTicketUserController(req, res) {
   }
 }
 
+// fonction d'affichage des tickets associés à un user
+export async function ajoutTicketPhotoController(req, res) {
+  try {
+    // on recupere l'id du user connecté depuis notre entete
+    const userId = req.user.id;
+    // on recupere l'id du ticket à afficher
+    const { _id } = req.params;
+
+    // on recherche le ticket depuis la base de donnée
+    const tickets = await ticketModel.getTicketById(_id, userId);
+    // on vérifie si le paramètre qui est passé existe dans la base de donnée
+    if (!mongoose.Types.ObjectId.isValid(_id)) {
+      return res.send("ID inconnu :" + _id);
+    }
+
+    // on verifie si le parametre est exactement l'id du ticket
+    if (_id === userId) {
+      return res.send("parametre ticket incorrect:" + _id);
+    }
+
+    // on verifie si le parametre est exactement l'id du ticket
+    if (mongoose.Types.ObjectId.isValid(_id) && !tickets) {
+      return res.send("ticket inexistant");
+    }
+
+    if (!req.files) {
+      res.send({
+        status: false,
+        message: "No file uploaded",
+      });
+    } else {
+      //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
+      let photo = req.files.photo;
+
+      await ticketModel.findByIdAndUpdate(
+        _id,
+        {
+          $push: {
+            conversations: {
+              picture: `http://localhost:3000/images/${photo.name}`,
+            },
+          },
+        },
+        { new: true, upsert: true, setDefaultsOnInsert: true }
+      );
+
+      //Use the mv() method to place the file in the upload directory (i.e. "uploads")
+      photo.mv("./images/tickets/" + photo.name);
+
+      // photo.mv("http://localhost:3000/images/", +photo.name);
+      //send response
+      res.send({
+        status: true,
+        message: "File is uploaded",
+        data: {
+          name: photo.name,
+          mimetype: photo.mimetype,
+          size: photo.size,
+        },
+      });
+    }
+  } catch (err) {
+    res.status(500).send(err);
+  }
+}
+
 // la fonction qui retourne la liste de tous les utilisateurs
 export async function getAllTicketsController(req, res) {
   try {
