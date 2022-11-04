@@ -16,6 +16,9 @@ const ClientTable = () => {
     (state) => state.userReducer
   );
 
+  const listClients = SearchListeClient.filter(
+    (client) => client.role !== "admin"
+  );
   useEffect(() => {
     // on affiche la liste des client des que nous somme sur la page
     if (!listeClients.length) {
@@ -55,8 +58,8 @@ const ClientTable = () => {
         </thead>
         {/* le contenu des tables(les differents tickets) */}
         <tbody>
-          {SearchListeClient && SearchListeClient.length > 0 ? (
-            SearchListeClient.map((row) => (
+          {listClients && listClients.length > 0 ? (
+            listClients.map((row) => (
               <tr key={row._id}>
                 {/* <td>{row._id}</td> */}
                 <td>{row.nom}</td>
