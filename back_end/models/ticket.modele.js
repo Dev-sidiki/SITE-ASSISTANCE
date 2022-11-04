@@ -33,6 +33,13 @@ const TicketSchema = new mongoose.Schema(
       // le message par defaut
       default: "En cours de traitement par l'operateur",
     },
+    // pour inserer une image pendant la creation du ticket
+    // picture: {
+    //   type: String,
+    //   required: true,
+    //   //   schema par defaut
+    //   default: "",
+    // },
 
     //l'historique des concersations
     conversations: [
@@ -49,6 +56,13 @@ const TicketSchema = new mongoose.Schema(
           type: String,
           maxlength: 1000,
           required: true,
+          default: "",
+        },
+        // pour inserer une image durant la conversation
+        picture: {
+          type: String,
+          required: true,
+          //   schema par defaut
           default: "",
         },
         // date de reponse du message
