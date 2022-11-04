@@ -176,7 +176,7 @@ async function refreshToken(_id, token) {
     // recherche via id utilisateur
     { _id },
     // on met a jour la valeur du token ainsi que la date de mise a jour
-    { $set: { "tokens.token": token, "tokens.dateCreation": Date.now() } },
+    { $set: { tokens: { token: token, dateCreation: Date.now() } } },
     // option supplementaire
     { new: true, upsert: true, setDefaultsOnInsert: true }
   );
