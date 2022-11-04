@@ -13,6 +13,7 @@ const AdminDashboard = () => {
   const { searchListeAllTickets } = useSelector((state) => state.ticketReducer);
   // console.log(listeTicketsClient);
   // console.log(users);
+  // console.log(listeClients);
   useEffect(() => {
     // on lance la fonctio qui affiche le nombre total de client et de ticket
     // des que nous sommes sur la page
@@ -29,6 +30,7 @@ const AdminDashboard = () => {
   // nombre total de ticket
   const totaltTickets = searchListeAllTickets;
 
+  const totalClients = listeClients.filter((client) => client.role !== "admin");
   return (
     <div>
       <div>
@@ -44,7 +46,7 @@ const AdminDashboard = () => {
           {/* info sur les ticket du clients */}
           <Row>
             <Col className="text-center  m-5">
-              <div>Nombre total de client: {listeClients.length}</div>
+              <div>Nombre total de client: {totalClients.length}</div>
               <br />
               <div>Nombre total de ticket: {totaltTickets.length}</div>
               <br />
