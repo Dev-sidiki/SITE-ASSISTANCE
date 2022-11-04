@@ -79,36 +79,6 @@ export const getSingleTicketInfo = (_id) => {
       // on fait une requete a la base de donée
       axios
         // on passe en parametre le _id comme dans le back
-        .get(`${process.env.REACT_APP_API_URL}api/ticket/${_id}`, {
-          headers: {
-            // token
-            Authorization: sessionStorage.getItem("token"),
-          },
-        })
-        // la reponse au cas ou la requete se passe bien
-        .then((res) => {
-          console.log(res.data);
-
-          if (res.data.tickets) {
-            // console.log(res.data.tickets[0].sujet);
-
-            //   on stocke le resultat dans le store dans la variable GET_TICKET du reducer
-            // grace au payload afin de les traités dans le reducer
-            // selon nos besoin
-            dispatch({ type: GET_TICKET, payload: res.data.tickets[0] });
-          }
-        })
-        .catch((err) => console.log(err)) //on affiche l'erreur au cas ou
-    );
-  };
-};
-//fonction pour recuperer les info sur un ticket
-export const getSingleTicketInfoByAdmin = (_id) => {
-  return (dispatch) => {
-    return (
-      // on fait une requete a la base de donée
-      axios
-        // on passe en parametre le _id comme dans le back
         .post(`${process.env.REACT_APP_API_URL}api/ticket/${_id}`, {
           headers: {
             // token
@@ -117,7 +87,7 @@ export const getSingleTicketInfoByAdmin = (_id) => {
         })
         // la reponse au cas ou la requete se passe bien
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
 
           if (res.data.tickets) {
             // console.log(res.data.tickets[0].sujet);
@@ -238,6 +208,34 @@ export const ResponseTicket = (_id, message, expediteur) => {
           type: REPLY_TICKETS,
           payload: { _id, message, expediteur },
         });
+      })
+      .catch((err) => console.log(err));
+  };
+};
+
+// fonction qui permet de repondre a un ticket
+export const ajoutImageTicket = (_id) => {
+  return (dispatch) => {
+    // on fait la requete a la base de donée
+    return axios({
+      method: "patch",
+      // on passe en parametre le _id comme dans le back
+      url: `${process.env.REACT_APP_API_URL}api/ticket/image/ajout-photo/${_id}`,
+      // le token
+      headers: {
+        Authorization: sessionStorage.getItem("token"),
+        "Content-Type": "multipart/form-data",
+      },
+    })
+      .then((res) => {
+        console.log(res.data);
+
+        // on dispact le type REPLY_TICKETS pour recuperer les info du payload
+        // et le stocker dans le reducer
+        // dispatch({
+        //   type: REPLY_TICKETS,
+        //   payload: { _id, message, expediteur },
+        // });
       })
       .catch((err) => console.log(err));
   };
