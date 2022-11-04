@@ -4,6 +4,7 @@ import express from "express";
 import mongoose from "mongoose";
 import helmet from "helmet";
 import morgan from "morgan";
+import fileUpload from "express-fileupload";
 import cors from "cors";
 import { authMiddleware } from "./middleware/middleware.js";
 
@@ -21,6 +22,13 @@ const { APP_PORT, APP_HOSTNAME, APP_DB_USER_PASS, APP_CLIENT_URL } =
   process.env;
 //  on initialise notre application express
 const app = express();
+
+//configure le express-fileupload middleware pour activer les multipart/form-datarequêtes.
+// app.use(
+//   fileUpload({
+//     createParentPath: true,
+//   })
+// );
 
 // on parametre les authoristaion d'accès
 // pour être plus précis
