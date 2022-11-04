@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
 import { ticketModel } from "../models/ticket.modele.js";
+// import { getSingleTicketInfo } from "../../front_end/src/Actions/ticketAction.js";
 
 // fonction de création d'un ticket
 export async function createTicketController(req, res) {
+  console.log(req);
   // on recupère les saisie du user
   const { sujet, expediteur, message } = req.body;
 
@@ -109,6 +111,7 @@ export async function ajoutTicketPhotoController(req, res) {
 
     // on recherche le ticket depuis la base de donnée
     const tickets = await ticketModel.getTicketById(_id, userId);
+
     // on vérifie si le paramètre qui est passé existe dans la base de donnée
     if (!mongoose.Types.ObjectId.isValid(_id)) {
       return res.send("ID inconnu :" + _id);
@@ -131,14 +134,14 @@ export async function ajoutTicketPhotoController(req, res) {
       });
     } else {
       //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
-      let photo = req.files.photo;
+      const photo = req.files.photo;
 
       await ticketModel.findByIdAndUpdate(
         _id,
         {
           $push: {
             conversations: {
-              picture: `http://localhost:3000/images/${photo.name}`,
+              picture: `http://localhost:3000/uploads/images_tickets/${photo.name}`,
             },
           },
         },
@@ -146,11 +149,9 @@ export async function ajoutTicketPhotoController(req, res) {
       );
 
       //Use the mv() method to place the file in the upload directory (i.e. "uploads")
-      photo.mv("./images/tickets/" + photo.name);
-
-      // photo.mv("http://localhost:3000/images/", +photo.name);
-      //send response
-      res.send({
+      // photo.mv(`./images_tickets/${photo.name}`);
+      photo.mv(`./uploads/images_tickets/${photo.name}`);
+      res.json({
         status: true,
         message: "File is uploaded",
         data: {
@@ -253,6 +254,7 @@ export async function getTicketUserByAdminController(req, res) {
 // fonction de mise a jour des conversation client-operateur
 export async function updateSenderReplyController(req, res) {
   try {
+    console.log(req);
     // on recupère les saisie du sender
     const { expediteur, message } = req.body;
 
@@ -275,6 +277,7 @@ export async function updateSenderReplyController(req, res) {
     let errors = {
       expediteur: "",
       message: "",
+      // picture,
     };
 
     // les differentes contrôle a faire avant la creation d'un user
@@ -292,6 +295,13 @@ export async function updateSenderReplyController(req, res) {
       res.json({ errors });
       return;
     }
+
+    // if (!picture) {
+    //   // message d'erreur si champ vide
+    //   errors.picture = "l'image est obligatoire";
+    //   res.json({ errors });
+    //   return;
+    // }
 
     // si on a tous les données,
     // on modifie la conversation depuis la base de donnée
