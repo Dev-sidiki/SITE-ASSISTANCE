@@ -4,7 +4,6 @@ import express from "express";
 import mongoose from "mongoose";
 import helmet from "helmet";
 import morgan from "morgan";
-import fileUpload from "express-fileupload";
 import cors from "cors";
 import { authMiddleware } from "./middleware/middleware.js";
 
@@ -105,6 +104,8 @@ app.use("/api/user", userRoutes);
 app.use("/api/ticket", ticketRoutes);
 /// on declenche les methodes liées à tokenRoutes quand nous sommes sur ce chemin: "/api/ticket"
 app.use("/api/token", tokenRoutes);
+// pour acceder aux images du dossier images
+app.use("/images", express.static("images"));
 
 // middleware pour pour attrapper l'erreur
 // si aucun router est trouver
