@@ -21,7 +21,9 @@ const storage = multer.diskStorage({
     // on recupère les extentions
     const extension = MIME_TYPES[file.mimetype];
     // pour rendre un fichier unique au cas ou on n'as les mêmes noms
-    callback(null, name + Date.now() + "." + extension);
+    // callback(null, name + Date.now() + "." + extension);
+    // avec es6
+    callback(null, `${name}_${Date.now()}.${extension}`);
   },
 });
 
