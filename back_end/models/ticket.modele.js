@@ -61,7 +61,7 @@ const TicketSchema = new mongoose.Schema(
         // pour inserer une image durant la conversation
         picture: {
           type: String,
-          required: true,
+          // required: true,
           //   schema par defaut
           default: "",
         },
@@ -128,7 +128,7 @@ async function getTicketByAdmin(_id) {
 }
 
 // on ajoute la reponse à un ticket pour un client
-async function updateSenderReply({ _id, message, expediteur }) {
+async function updateSenderReply({ _id, message, expediteur, picture }) {
   const newReponse = await this.findOneAndUpdate(
     // recherche via id ticket
     { _id },
@@ -136,7 +136,7 @@ async function updateSenderReply({ _id, message, expediteur }) {
     {
       statut: "En cours de traitement par l'operateur",
       $push: {
-        conversations: { message, expediteur },
+        conversations: { message, expediteur, picture },
       },
     },
     // option supplementaire pour valider le changement de notre bd
