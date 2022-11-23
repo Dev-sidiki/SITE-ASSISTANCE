@@ -18,6 +18,18 @@ const ConversationHistory = ({ message }) => {
         </div>
       </div>
       <div className="message">{row.message}</div>
+      {row.picture ? (
+        <div className="">
+          {/* <span>{row.picture}</span> */}
+          <br />
+          <img
+            style={{ width: "100%", height: "180px" }}
+            src={row.picture}
+            alt="img"
+            crossOrigin=""
+          />
+        </div>
+      ) : null}
     </div>
   ));
 };
