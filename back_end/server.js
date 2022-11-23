@@ -35,6 +35,7 @@ const corsOptions = {
   // on autorise les requete depuis notre front(localhost3000)
   origin: APP_CLIENT_URL,
   credentials: true,
+
   // pour que les requête marche mieux
   // trouver sur slacoverflow
   // il faut preciser le nom de son token dans le allowedHeaders
@@ -105,7 +106,7 @@ app.use("/api/ticket", ticketRoutes);
 /// on declenche les methodes liées à tokenRoutes quand nous sommes sur ce chemin: "/api/ticket"
 app.use("/api/token", tokenRoutes);
 // pour acceder aux images du dossier images
-app.use("/images", express.static("images"));
+app.use("/images", express.static("./images"));
 
 // middleware pour pour attrapper l'erreur
 // si aucun router est trouver
