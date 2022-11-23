@@ -43,6 +43,7 @@ function App() {
           <Route exact path="/">
             <Home />
           </Route>
+
           {/* route pour accéder à la page d'inscription du site */}
           <Route exact path="/inscription">
             <InscriptionPage />
