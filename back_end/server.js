@@ -22,13 +22,6 @@ const { APP_PORT, APP_HOSTNAME, APP_DB_USER_PASS, APP_CLIENT_URL } =
 //  on initialise notre application express
 const app = express();
 
-//configure le express-fileupload middleware pour activer les multipart/form-datarequêtes.
-// app.use(
-//   fileUpload({
-//     createParentPath: true,
-//   })
-// );
-
 // on parametre les authoristaion d'accès
 // pour être plus précis
 const corsOptions = {
@@ -85,15 +78,6 @@ mongoose
   )
   .then(() => console.log("connected to Mongo"))
   .catch((err) => console.log("Connected failed", err));
-
-// ==========
-// JWT
-// ==========
-// un middleware qui intercepte tout
-// il se declenche a tout moment
-app.get("*", authMiddleware);
-// pour connecter automatiquement le user si on connait son token
-// pour eviter que l'utilisateur se connecte automatiquement a chaque fois
 
 // ==========
 // ROUTES
