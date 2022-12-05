@@ -48,21 +48,17 @@ const TicketSchema = new mongoose.Schema(
         expediteur: {
           type: String,
           maxlength: 50,
-          required: true,
           default: "",
         },
         //le message en question
         message: {
           type: String,
           maxlength: 1000,
-          required: true,
           default: "",
         },
         // pour inserer une image durant la conversation
         picture: {
           type: String,
-          // required: true,
-          //   schema par defaut
           default: "",
         },
         // date de reponse du message
@@ -86,7 +82,7 @@ TicketSchema.static("getTickets", getTickets);
 TicketSchema.static("getAllTickets", getAllTickets);
 TicketSchema.static("getTicketById", getTicketById);
 TicketSchema.static("getTicketByAdmin", getTicketByAdmin);
-TicketSchema.static("updateSenderReply", updateSenderReply);
+TicketSchema.static("ajoutSenderReply", ajoutSenderReply);
 TicketSchema.static("updateStatusResponseClient", updateStatusResponseClient);
 TicketSchema.static("updateStatusClose", updateStatusClose);
 TicketSchema.static("deleteTicket", deleteTicket);
@@ -128,7 +124,7 @@ async function getTicketByAdmin(_id) {
 }
 
 // on ajoute la reponse à un ticket pour un client
-async function updateSenderReply({ _id, message, expediteur, picture }) {
+async function ajoutSenderReply({ _id, message, expediteur, picture }) {
   const newReponse = await this.findOneAndUpdate(
     // recherche via id ticket
     { _id },
