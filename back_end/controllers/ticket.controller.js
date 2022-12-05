@@ -101,71 +101,6 @@ export async function getTicketUserController(req, res) {
   }
 }
 
-// fonction d'affichage des tickets associés à un user
-export async function ajoutTicketPhotoController(req, res) {
-  try {
-    // on recupere l'id du user connecté depuis notre entete
-    const userId = req.user.id;
-    // on recupere l'id du ticket à afficher
-    const { _id } = req.params;
-
-    // on recherche le ticket depuis la base de donnée
-    const tickets = await ticketModel.getTicketById(_id, userId);
-
-    // on vérifie si le paramètre qui est passé existe dans la base de donnée
-    if (!mongoose.Types.ObjectId.isValid(_id)) {
-      return res.send("ID inconnu :" + _id);
-    }
-
-    // on verifie si le parametre est exactement l'id du ticket
-    if (_id === userId) {
-      return res.send("parametre ticket incorrect:" + _id);
-    }
-
-    // on verifie si le parametre est exactement l'id du ticket
-    if (mongoose.Types.ObjectId.isValid(_id) && !tickets) {
-      return res.send("ticket inexistant");
-    }
-
-    if (!req.files) {
-      res.send({
-        status: false,
-        message: "No file uploaded",
-      });
-    } else {
-      //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
-      const photo = req.files.photo;
-
-      await ticketModel.findByIdAndUpdate(
-        _id,
-        {
-          $push: {
-            conversations: {
-              picture: `http://localhost:3000/uploads/images_tickets/${photo.name}`,
-            },
-          },
-        },
-        { new: true, upsert: true, setDefaultsOnInsert: true }
-      );
-
-      //Use the mv() method to place the file in the upload directory (i.e. "uploads")
-      // photo.mv(`./images_tickets/${photo.name}`);
-      photo.mv(`./uploads/images_tickets/${photo.name}`);
-      res.json({
-        status: true,
-        message: "File is uploaded",
-        data: {
-          name: photo.name,
-          mimetype: photo.mimetype,
-          size: photo.size,
-        },
-      });
-    }
-  } catch (err) {
-    res.status(500).send(err);
-  }
-}
-
 // la fonction qui retourne la liste de tous les utilisateurs
 export async function getAllTicketsController(req, res) {
   try {
@@ -254,7 +189,7 @@ export async function getTicketUserByAdminController(req, res) {
 // fonction de mise a jour des conversation client-operateur
 export async function updateSenderReplyController(req, res) {
   try {
-    console.log(req);
+    // console.log(req);
     // on recupère les saisie du sender
     const { expediteur, message } = req.body;
 
@@ -277,7 +212,6 @@ export async function updateSenderReplyController(req, res) {
     let errors = {
       expediteur: "",
       message: "",
-      // picture,
     };
 
     // les differentes contrôle a faire avant la creation d'un user
@@ -296,27 +230,45 @@ export async function updateSenderReplyController(req, res) {
       return;
     }
 
-    // if (!picture) {
-    //   // message d'erreur si champ vide
-    //   errors.picture = "l'image est obligatoire";
-    //   res.json({ errors });
-    //   return;
-    // }
-
-    // si on a tous les données,
-    // on modifie la conversation depuis la base de donnée
-    const reponse = await ticketModel.updateSenderReply({
-      _id,
-      message,
-      expediteur,
-    });
-
-    // reponse si tout se passe bien
-    if (reponse._id) {
-      return res.status(200).json({
-        statut: "message ajouté",
-        message: "votre message a été ajouté",
+    if (!req.file) {
+      const reponse = await ticketModel.ajoutSenderReply({
+        _id,
+        message,
+        expediteur,
       });
+      if (reponse._id) {
+        return res.status(200).json({
+          statut: "message ajouté",
+          message: "votre message a été ajouté sans une image",
+        });
+      }
+    } else {
+      const reponse = await ticketModel.findByIdAndUpdate(
+        _id,
+        {
+          $push: {
+            conversations: {
+              message,
+              expediteur,
+              picture: `${req.protocol}://${req.get("host")}/images/${
+                req.file.filename
+              }`,
+            },
+          },
+        },
+        { new: true, upsert: true, setDefaultsOnInsert: true }
+      );
+      if (reponse._id) {
+        return res.status(200).json({
+          statut: "message et image ajoutés",
+          message: "votre message a été ajouté avec une image",
+          dataImage: {
+            name: req.file.filename,
+            mimetype: req.file.mimetype,
+            size: req.file.size,
+          },
+        });
+      }
     }
 
     // reponse en cas d'erreur
@@ -327,6 +279,125 @@ export async function updateSenderReplyController(req, res) {
   } catch (err) {
     // sinon on retourne le message d'erreur
     return res.send(err.message);
+  }
+}
+
+export async function editUpdateSenderReplyController(req, res) {
+  try {
+    // console.log(req);
+    // on recupère les saisie du sender
+    const { newMessage, message_id } = req.body;
+
+    // on recupere l'id du user connecté depuis notre entete
+    const userId = req.user.id;
+
+    // on recupere l'id du ticket en parametre
+    const { _id } = req.params;
+
+    // variable de gestion des erreurs
+    let errors = {
+      message_idError: "",
+      newMessagError: "",
+    };
+
+    if (!message_id) {
+      // message d'erreur si champ vide
+      errors.message_idError = "l'id du message est obligatoire";
+      res.json({ errors });
+      return;
+    }
+
+    if (!newMessage) {
+      // message d'erreur si champ vide
+      errors.newMessagError = "le nouveau message est obligatoire";
+      res.json({ errors });
+      return;
+    }
+
+    // on vérifie si le paramètre qui est passé existe dans la base de donnée
+    if (!mongoose.Types.ObjectId.isValid(_id)) {
+      return res.send("ID inconnu :" + _id);
+    }
+
+    // on verifie si le parametre est exactement l'id du ticket
+    if (_id === userId) {
+      return res.send("parametre ticket incorrect:" + _id);
+    }
+
+    ticketModel.find({ _id, userId }, (err, docs) => {
+      const findSentenceInConversationTab = docs[0].conversations.find(
+        (conversation) => {
+          return conversation._id == message_id;
+        }
+      );
+
+      if (!findSentenceInConversationTab)
+        return res.status(404).send("conversation not found");
+      // console.log(findConversationInConversationTab);
+
+      findSentenceInConversationTab.message = newMessage;
+
+      return docs[0].save((err) => {
+        if (!err) return res.status(200).send(docs);
+        return res.status(500).send(err);
+      });
+      // return res.status(200).send(docs);
+    });
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+}
+
+export async function deleteSenderReplyController(req, res) {
+  try {
+    // console.log(req);
+    // on recupère les saisie du sender
+    const { message_id } = req.body;
+
+    // variable de gestion des erreurs
+    let errors = {
+      message_idError: "",
+    };
+
+    if (!message_id) {
+      // message d'erreur si champ vide
+      errors.message_idError = "l'id du message est obligatoire";
+      res.json({ errors });
+      return;
+    }
+    // on recupere l'id du user connecté depuis notre entete
+    const userId = req.user.id;
+
+    // on recupere l'id du ticket en parametre
+    const { _id } = req.params;
+
+    // on vérifie si le paramètre qui est passé existe dans la base de donnée
+    if (!mongoose.Types.ObjectId.isValid(_id)) {
+      return res.send("ID inconnu :" + _id);
+    }
+
+    // on verifie si le parametre est exactement l'id du ticket
+    if (_id === userId) {
+      return res.send("parametre ticket incorrect:" + _id);
+    }
+
+    ticketModel.findByIdAndUpdate(
+      _id,
+      {
+        $pull: {
+          conversations: {
+            _id: message_id,
+          },
+        },
+      },
+      { new: true, upsert: true, setDefaultsOnInsert: true },
+      (err, docs) => {
+        if (!err) return res.send(docs);
+        else return res.status(400).send(err);
+      }
+    );
+  } catch (err) {
+    return res.status(400).send(err);
   }
 }
 
