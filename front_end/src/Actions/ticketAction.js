@@ -117,7 +117,7 @@ export const filterSearchTicket = (search) => {
 //fonction pour cloturer le ticket
 // lorsque le client est satisfait
 export const updateTicketStatusClosed = (_id) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     // on fait la requête a la base de donnée
     return axios({
       method: "patch",
@@ -141,7 +141,7 @@ export const updateTicketStatusClosed = (_id) => {
 };
 
 export const updateStatusResponse = (_id) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     // on fait la requête a la base de donnée
     return axios({
       method: "patch",
@@ -166,7 +166,7 @@ export const updateStatusResponse = (_id) => {
 
 //fonction qui permet de supprimer un ticket
 export const deleteTicket = (_id) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     // on fait la requête de supression
     return axios({
       method: "delete",
@@ -181,61 +181,6 @@ export const deleteTicket = (_id) => {
         // on dispact le type DELETE_TICKET pour recuperer les info du payload
         // et le stocker dans le reducer
         dispatch({ type: DELETE_TICKET, payload: { _id } });
-      })
-      .catch((err) => console.log(err));
-  };
-};
-
-// fonction qui permet de repondre a un ticket
-export const ResponseTicket = (_id, message, expediteur) => {
-  return (dispatch) => {
-    // on fait la requete a la base de donée
-    return axios({
-      method: "put",
-      url: `${process.env.REACT_APP_API_URL}api/ticket/${_id}`,
-      headers: {
-        Authorization: sessionStorage.getItem("token"),
-      },
-      // on lui passe les data pour repondre a un ticket
-      data: { message, expediteur },
-    })
-      .then((res) => {
-        console.log(res.data);
-
-        // on dispact le type REPLY_TICKETS pour recuperer les info du payload
-        // et le stocker dans le reducer
-        dispatch({
-          type: REPLY_TICKETS,
-          payload: { _id, message, expediteur },
-        });
-      })
-      .catch((err) => console.log(err));
-  };
-};
-
-// fonction qui permet de repondre a un ticket
-export const ajoutImageTicket = (_id) => {
-  return (dispatch) => {
-    // on fait la requete a la base de donée
-    return axios({
-      method: "patch",
-      // on passe en parametre le _id comme dans le back
-      url: `${process.env.REACT_APP_API_URL}api/ticket/image/ajout-photo/${_id}`,
-      // le token
-      headers: {
-        Authorization: sessionStorage.getItem("token"),
-        "Content-Type": "multipart/form-data",
-      },
-    })
-      .then((res) => {
-        console.log(res.data);
-
-        // on dispact le type REPLY_TICKETS pour recuperer les info du payload
-        // et le stocker dans le reducer
-        // dispatch({
-        //   type: REPLY_TICKETS,
-        //   payload: { _id, message, expediteur },
-        // });
       })
       .catch((err) => console.log(err));
   };
