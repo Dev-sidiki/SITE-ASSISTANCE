@@ -44,6 +44,11 @@ const TicketSchema = new mongoose.Schema(
     //l'historique des concersations
     conversations: [
       {
+        // client associé a ce ticket
+        expediteurId: {
+          // string
+          type: mongoose.Schema.Types.ObjectId,
+        },
         // celui ou celle qui envoi le message (client ou operateur)
         expediteur: {
           type: String,
@@ -124,7 +129,13 @@ async function getTicketByAdmin(_id) {
 }
 
 // on ajoute la reponse à un ticket pour un client
-async function ajoutSenderReply({ _id, message, expediteur, picture }) {
+async function ajoutSenderReply({
+  _id,
+  expediteurId,
+  message,
+  expediteur,
+  picture,
+}) {
   const newReponse = await this.findOneAndUpdate(
     // recherche via id ticket
     { _id },
@@ -132,7 +143,7 @@ async function ajoutSenderReply({ _id, message, expediteur, picture }) {
     {
       statut: "En cours de traitement par l'operateur",
       $push: {
-        conversations: { message, expediteur, picture },
+        conversations: { expediteurId, message, expediteur, picture },
       },
     },
     // option supplementaire pour valider le changement de notre bd
