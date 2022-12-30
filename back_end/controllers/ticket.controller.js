@@ -51,6 +51,7 @@ export async function createTicketController(req, res) {
     sujet: sujet,
     conversations: [
       {
+        expediteurId: decodedId,
         expediteur,
         message,
       },
@@ -191,7 +192,7 @@ export async function updateSenderReplyController(req, res) {
   try {
     // console.log(req);
     // on recupère les saisie du sender
-    const { expediteur, message } = req.body;
+    const { expediteur, message, expediteurId } = req.body;
 
     // on recupere l'id du user connecté depuis notre entete
     const userId = req.user.id;
@@ -210,6 +211,7 @@ export async function updateSenderReplyController(req, res) {
     }
     // variable de gestion des erreurs
     let errors = {
+      expediteurId: "",
       expediteur: "",
       message: "",
     };
@@ -230,9 +232,17 @@ export async function updateSenderReplyController(req, res) {
       return;
     }
 
+    if (!expediteurId) {
+      // message d'erreur si champ vide
+      errors.expediteurId = "l'id de l'expediteur est obligatoire";
+      res.json({ errors });
+      return;
+    }
+
     if (!req.file) {
       const reponse = await ticketModel.ajoutSenderReply({
         _id,
+        expediteurId: userId,
         message,
         expediteur,
       });
@@ -240,6 +250,7 @@ export async function updateSenderReplyController(req, res) {
         return res.status(200).json({
           statut: "message ajouté",
           message: "votre message a été ajouté sans une image",
+          reponse,
         });
       }
     } else {
@@ -248,6 +259,7 @@ export async function updateSenderReplyController(req, res) {
         {
           $push: {
             conversations: {
+              expediteurId: userId,
               message,
               expediteur,
               picture: `${req.protocol}://${req.get("host")}/images/${
@@ -282,7 +294,7 @@ export async function updateSenderReplyController(req, res) {
   }
 }
 
-export async function editUpdateSenderReplyController(req, res) {
+export async function editSenderReplyController(req, res) {
   try {
     // console.log(req);
     // on recupère les saisie du sender
@@ -324,7 +336,7 @@ export async function editUpdateSenderReplyController(req, res) {
       return res.send("parametre ticket incorrect:" + _id);
     }
 
-    ticketModel.find({ _id, userId }, (err, docs) => {
+    ticketModel.find({ _id }, (err, docs) => {
       const findSentenceInConversationTab = docs[0].conversations.find(
         (conversation) => {
           return conversation._id == message_id;
@@ -351,7 +363,7 @@ export async function editUpdateSenderReplyController(req, res) {
 export async function deleteSenderReplyController(req, res) {
   try {
     // console.log(req);
-    // on recupère les saisie du sender
+    // on recupère l'id du message
     const { message_id } = req.body;
 
     // variable de gestion des erreurs
