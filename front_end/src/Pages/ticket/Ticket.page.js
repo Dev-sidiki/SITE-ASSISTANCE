@@ -93,7 +93,7 @@ const Ticket = () => {
       <Row className="mt-4">
         <Col>
           {selectedTicket.conversations && (
-            <ConversationHistory message={selectedTicket.conversations} />
+            <ConversationHistory conversations={selectedTicket.conversations} />
           )}
         </Col>
       </Row>
