@@ -15,7 +15,7 @@ export const DELETE_USER = "DELETE_USER";
 
 // fonction qui affiche le profil d'un user
 export const getUserProfil = () => {
-  return (dispatch) => {
+  return async (dispatch) => {
     // on recupere le token depuis notre base de donnée local
     const accessToken = localStorage.getItem("token");
 
@@ -46,7 +46,7 @@ export const getUserProfil = () => {
 
 // fonction qui affiche le profil d'un user
 export const getAllUsers = () => {
-  return (dispatch) => {
+  return async (dispatch) => {
     // on recupere le token depuis notre base de donnée local
     // const accessToken = localStorage.getItem("token");
 
@@ -77,7 +77,7 @@ export const getAllUsers = () => {
 
 // fonction de mise a jour du token du user connecté
 export const getNewAccesUserProfil = () => {
-  return (dispatch) => {
+  return async (dispatch) => {
     // on recupere le token du user connecté
     const accessToken = localStorage.getItem("token");
 
@@ -122,7 +122,7 @@ export const getNewAccesUserProfil = () => {
 
 // fonction de déconnection d'un user
 export const userLogout = () => {
-  return (dispatch) => {
+  return async (dispatch) => {
     return axios({
       method: "delete",
       url: `${process.env.REACT_APP_API_URL}api/user/logout`,
@@ -156,11 +156,11 @@ export const filterSearchClient = (search) => {
 };
 
 // fonction de déconnection d'un user
-export const deleteUser = () => {
-  return (dispatch) => {
+export const deleteUser = (_id) => {
+  return async (dispatch) => {
     return axios({
       method: "delete",
-      url: `${process.env.REACT_APP_API_URL}api/user/delete-user`,
+      url: `${process.env.REACT_APP_API_URL}api/user/${_id}`,
       withCredentials: true,
       headers: {
         Authorization: sessionStorage.getItem("token"),
@@ -172,7 +172,7 @@ export const deleteUser = () => {
         // on stocke le resultat dans le store dans la variable GET_USER du reducer
         // grace au payload afin de les traités dans le reducer
         // selon nos besoin
-        dispatch({ type: DELETE_USER, payload: res.data });
+        dispatch({ type: DELETE_USER, payload: _id });
       })
       .catch((err) => console.log(err));
   };
